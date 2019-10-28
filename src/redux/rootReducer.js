@@ -2,6 +2,7 @@ const initialState = {
     text:'',
     hours:'',
     minutes:'',
+    /*id:0,*/
     task:[],
 }
 
@@ -30,11 +31,13 @@ export default function rootReducer(state = initialState, action) {
                 minutes: '',
             }
         case 'REMOVE_ITEM':
-            let newTask = state.task;
-            newTask.splice(action.payload, 1);
             return {
-                task:newTask
+                task:[
+                    ...state.task.slice(0,action.payload),
+                    ...state.task.slice(action.payload + 1)
+                ]
             }
+
         default:
             return state
     }

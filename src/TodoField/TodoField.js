@@ -64,9 +64,9 @@ class TodoField extends React.Component {
                         {this.props.task.map((e,index)=>{
                             return (
                                 <TodoItem key={index}>
-                                    <Title>{e.text} индекс: {index}</Title>
+                                    <Title>{e.text}</Title>
                                     <Time>{e.hours} : {e.minutes}</Time>
-                                    <Close icon={faTimes} size="lg" onClick={console.log(index)} />
+                                    <Close icon={faTimes} size="lg" onClick={()=> this.props.removeItem(index)} />
                                 </TodoItem>
                             )
                         })}
@@ -82,11 +82,18 @@ function mapStateToProps(state) {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        removeItem: (index) => dispatch({type: 'REMOVE_ITEM', payload:index})
-    }
+const mapDispatchToProps = dispatch => ({
+    removeItem: index => dispatch({type: 'REMOVE_ITEM', payload:index})
+})
 
-}
+
+
+/*function mapDispatchToProps(dispatch) {
+    return {
+        removeItem: (id) => dispatch({type: 'REMOVE_ITEM', payload:id})
+    }
+}*/
+
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(TodoField)
