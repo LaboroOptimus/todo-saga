@@ -6,7 +6,7 @@ const initialState = {
     task:[],
     error: false,
     validate: false,
-    testCounter: 0
+    errorsTypes:[],
 }
 
 export default function rootReducer(state = initialState, action) {
@@ -39,7 +39,7 @@ export default function rootReducer(state = initialState, action) {
                         hours: '',
                         minutes: '',
                         validate: false,
-                        testCounter: state.testCounter + 1
+                        errorsTypes: []
                     }
                 case true :
                     return {
@@ -54,7 +54,8 @@ export default function rootReducer(state = initialState, action) {
                 task:[
                     ...state.task.slice(0,action.payload),
                     ...state.task.slice(action.payload + 1)
-                ]
+                ],
+                    errorsTypes: []
             }
 
         case 'FETCH_SUCCESS':
@@ -68,24 +69,50 @@ export default function rootReducer(state = initialState, action) {
                 error: true
             }
         case 'VALIDATE' :
-            switch (state.text) {
-                case '' :
+            const errors = [];
+            const validate = (text, hours, minutes) => {
+                let i = 0;
+                if(text.length === 0 || text.length < 6){
+                    errors.push('Неверное название задачи');
+                    i++;
+                }
+                if(hours.length === 0 || hours.length < 1 || hours.length >= 3){
+                    errors.push('Неверное значение часов');
+                    i++;
+                }
+                if(minutes.length === 0 || minutes.length < 1 || minutes.length >= 3){
+                    errors.push('Неверное значение минут');
+                    i++;
+                }
+                if(i > 0) {
+                    return false
+                }
+                else {
+                    return true;
+                }
+            }
+
+            switch (validate(state.text,state.hours,state.minutes)) {
+                case false :
                     return {
                         ...state,
                         error: true,
                         validate: true,
+                        errorsTypes: [...errors]
                     }
-                case '1' :
+                case true :
                     return {
                         ...state,
-                        error: true,
+                        error: false,
                         validate: true,
+                        errorsTypes: []
                     }
                 default:
                     return {
                         ...state,
                         error: false,
                         validate: true,
+                        errorsTypes: []
                     }
             }
 

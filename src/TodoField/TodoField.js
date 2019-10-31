@@ -3,11 +3,11 @@ import styled from "styled-components";
 import {connect} from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled.div`
     display: flex;
     justify-content: center;
-   
 `;
 
 const Todo = styled.div`
@@ -54,13 +54,30 @@ const Close = styled(FontAwesomeIcon)`
     }
 `;
 
+const Error = styled.p`
+    color: #B83F3D;
+`;
+
+const ErrorIcon = styled(FontAwesomeIcon)`
+    color: #B83F3D
+    margin-right: 5px;
+`;
+
 
 class TodoField extends React.Component {
 
     render() {
+        console.log(this.props.errorsTypes)
         return(
             <React.Fragment>
-                {this.props.validate && this.props.error ? <p>Произошла ошибка, введите еще раз</p> : null}
+                { /*{this.props.validate && this.props.error ? <p>Произошла ошибка, введите еще раз</p> : null}*/ }
+                {this.props.errorsTypes.length > 0 && this.props.errorsTypes.map((e,index)=>{
+                    return (
+                        <Error key={index}>
+                            <ErrorIcon icon={faExclamationCircle}/>Ошибка #{index + 1} - {e}
+                        </Error>
+                    )
+                })}
                 <Wrapper>
                         <Todo>
                             {this.props.task.map((e,index)=>{
@@ -84,6 +101,7 @@ function mapStateToProps(state) {
         task: [...state.task],
         validate: state.validate,
         error: state.error,
+        errorsTypes: state.errorsTypes,
     }
 }
 

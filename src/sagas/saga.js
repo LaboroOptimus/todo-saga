@@ -28,7 +28,7 @@ export function * watchValidate() {
 // смотрит за событиями validate
 
 export function * workerValidate() {
-    yield delay(1000);
+   /* yield delay(1000); */
     yield put({type:'ADD'});
 }
 // выполняет action add
