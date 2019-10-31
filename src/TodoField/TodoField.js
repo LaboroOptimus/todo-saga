@@ -29,7 +29,7 @@ const TodoItem = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 10px; 
-`
+`;
 
 const Title = styled.p`
     color: #fff;
