@@ -60,7 +60,10 @@ class TodoField extends React.Component {
     render() {
         return(
                 <Wrapper>
-                    <Todo>
+
+                    { this.props.error ? <p>Произошла ошибка</p> :
+
+                        <Todo>
                         {this.props.task.map((e,index)=>{
                             return (
                                 <TodoItem key={index}>
@@ -70,7 +73,7 @@ class TodoField extends React.Component {
                                 </TodoItem>
                             )
                         })}
-                    </Todo>
+                    </Todo>}
                 </Wrapper>
         )
     }
@@ -78,7 +81,8 @@ class TodoField extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        task: [...state.task]
+        task: [...state.task],
+        error: state.error
     }
 }
 

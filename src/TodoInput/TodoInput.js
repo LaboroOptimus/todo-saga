@@ -162,7 +162,9 @@ class TodoInput extends React.Component {
                         <Label htmlFor="minutes">Кол-во минут</Label>
                     </FormGroup>
                     <Button type="submit" onClick={this.props.onAdd}>Добавить</Button>
+                    <Button onClick={this.props.fetchTodo}>Вызвать сагу</Button>
                 </form>
+
             </Wrapper>
         )
     }
@@ -183,6 +185,7 @@ function mapDispatchToProps(dispatch) {
         onChangeText: (e) => dispatch({type: 'CHANGE_TEXT', payload:e.target.value}),
         onChangeHours: (e) => dispatch({type: 'CHANGE_HOURS', payload: e.target.value}),
         onChangeMinutes: (e) => dispatch({type: 'CHANGE_MINUTES', payload: e.target.value}),
+        fetchTodo: () => dispatch({type: 'FETCH_TODO'}),
         onAdd: () => dispatch({type:'ADD'})
     }
 }
