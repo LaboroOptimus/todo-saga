@@ -131,26 +131,29 @@ const FormGroup = styled.div`
 `;
 
 class TodoInput extends React.Component {
-
-    render(){
-        return(
-            <React.Fragment>
+    render() {
+        return (
             <Wrapper>
-                <form onSubmit={(e) => {e.preventDefault()}}>
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                }}>
                     <FormGroup>
-                        <Input type="text" onChange={this.props.onChangeText}  value={this.props.text} required="required"/>
+                        <Input type="text" onChange={this.props.onChangeText} value={this.props.text}
+                               required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="hours">Введите название задачи</Label>
                     </FormGroup>
                     <FormGroup>
-                        <Input type="text" name="hours" onChange={this.props.onChangeHours} value={this.props.hours} required="required"/>
+                        <Input type="text" name="hours" onChange={this.props.onChangeHours} value={this.props.hours}
+                               required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="hours">Кол-во часов</Label>
                     </FormGroup>
                     <FormGroup>
-                        <Input type="text" name="minutes" onChange={this.props.onChangeMinutes} value={this.props.minutes} required="required"/>
+                        <Input type="text" name="minutes" onChange={this.props.onChangeMinutes}
+                               value={this.props.minutes} required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="minutes">Кол-во минут</Label>
@@ -159,16 +162,15 @@ class TodoInput extends React.Component {
                     <Button onClick={this.props.fetchTodo}>Вызвать сагу</Button>
                 </form>
             </Wrapper>
-            </React.Fragment>
         )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        text:state.text,
-        hours:state.hours,
-        minutes:state.minutes,
+        text: state.text,
+        hours: state.hours,
+        minutes: state.minutes,
         task: state.task,
         validate: state.validate,
         error: state.error,
@@ -178,7 +180,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onChangeText: (e) => dispatch({type: 'CHANGE_TEXT', payload:e.target.value}),
+        onChangeText: (e) => dispatch({type: 'CHANGE_TEXT', payload: e.target.value}),
         onChangeHours: (e) => dispatch({type: 'CHANGE_HOURS', payload: e.target.value}),
         onChangeMinutes: (e) => dispatch({type: 'CHANGE_MINUTES', payload: e.target.value}),
         fetchTodo: () => dispatch({type: 'FETCH_TODO'}),

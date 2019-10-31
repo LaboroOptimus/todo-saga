@@ -1,12 +1,13 @@
 const initialState = {
-    text:'',
-    hours:'',
-    minutes:'',
-    /*id:0,*/
-    task:[],
+    text: '',
+    hours: '',
+    minutes: '',
+    task: [],
     error: false,
     validate: false,
-    errorsTypes:[],
+    errorsTypes: [],
+    currentFilter:'all',
+
 }
 
 export default function rootReducer(state = initialState, action) {
@@ -15,21 +16,17 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 text: action.payload
-            }
+            };
         case 'CHANGE_HOURS':
             return {
                 ...state,
                 hours: action.payload
-            }
+            };
         case 'CHANGE_MINUTES':
             return {
                 ...state,
                 minutes: action.payload
-            }
-
-
-
-
+            };
         case 'ADD':
             switch (state.error) {
                 case false :
@@ -39,74 +36,71 @@ export default function rootReducer(state = initialState, action) {
                         hours: '',
                         minutes: '',
                         validate: false,
+                        //...state
                         errorsTypes: []
                     }
                 case true :
                     return {
                         ...state,
                     }
-                default : return state
+                default :
+                    return state
             }
 
 
         case 'REMOVE_ITEM':
             return {
-                task:[
-                    ...state.task.slice(0,action.payload),
+                task: [
+                    ...state.task.slice(0, action.payload),
                     ...state.task.slice(action.payload + 1)
                 ],
-                    errorsTypes: []
+                errorsTypes: []
             }
 
         case 'FETCH_SUCCESS':
             return {
                 ...state,
-                task:[...state.task, {text: action.payload.title, hours:'01', minutes: '10'}]
-            }
+                task: [...state.task, {text: action.payload.title, hours: '01', minutes: '10'}]
+            };
         case 'FETCH_ERROR' :
             return {
-                ... state,
+                ...state,
                 error: true
-            }
+            };
         case 'VALIDATE' :
             const errors = [];
             const validate = (text, hours, minutes) => {
                 let i = 0;
-                if(text.length === 0 || text.length < 6){
+                if (text.length === 0 || text.length < 6) {
                     errors.push('Неверное название задачи');
                     i++;
                 }
-                if(hours.length === 0 || hours.length < 1 || hours.length >= 3){
+                if (hours.length === 0 || hours.length < 1 || hours.length >= 3) {
                     errors.push('Неверное значение часов');
                     i++;
                 }
-                if(minutes.length === 0 || minutes.length < 1 || minutes.length >= 3){
+                if (minutes.length === 0 || minutes.length < 1 || minutes.length >= 3) {
                     errors.push('Неверное значение минут');
                     i++;
                 }
-                if(i > 0) {
-                    return false
-                }
-                else {
-                    return true;
-                }
+                return i <= 0;
             }
 
-            switch (validate(state.text,state.hours,state.minutes)) {
+            switch (validate(state.text, state.hours, state.minutes)) {
                 case false :
                     return {
                         ...state,
                         error: true,
                         validate: true,
                         errorsTypes: [...errors]
-                    }
+                    };
                 case true :
                     return {
                         ...state,
                         error: false,
                         validate: true,
                         errorsTypes: []
-                    }
+                    };
                 default:
                     return {
                         ...state,

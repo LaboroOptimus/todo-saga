@@ -6,12 +6,14 @@ import * as serviceWorker from './serviceWorker';
 import {createStore, applyMiddleware} from "redux";
 import createSagaMiddleware from 'redux-saga'
 import rootReducer from "./redux/rootReducer";
+import {reducer} from "./redux/indexReducer"; // подключаю общий редьюсер
 import {Provider} from 'react-redux'
 import rootSaga from './sagas/saga.js'
 
+
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(
-    rootReducer,
+    reducer, // добавляю в качестве параметра в createStore
     applyMiddleware(sagaMiddleware)
 );
 
@@ -19,11 +21,11 @@ sagaMiddleware.run(rootSaga)
 
 const app = (
     <Provider store={store}>
-        <App />
+        <App/>
     </Provider>
 )
 
-const action = type => store.dispatch({type})
+/* action = type => store.dispatch({type}) */
 
 ReactDOM.render(app, document.getElementById('root'));
 
