@@ -130,42 +130,36 @@ const FormGroup = styled.div`
     margin-bottom:45px; 
 `;
 
-
-
-
 class TodoInput extends React.Component {
-
 
     render(){
         return(
+            <React.Fragment>
             <Wrapper>
-                <form onSubmit={e => {e.preventDefault()}}>
+                <form onSubmit={(e) => {e.preventDefault()}}>
                     <FormGroup>
                         <Input type="text" onChange={this.props.onChangeText}  value={this.props.text} required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="hours">Введите название задачи</Label>
                     </FormGroup>
-
                     <FormGroup>
                         <Input type="text" name="hours" onChange={this.props.onChangeHours} value={this.props.hours} required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="hours">Кол-во часов</Label>
                     </FormGroup>
-
-
                     <FormGroup>
                         <Input type="text" name="minutes" onChange={this.props.onChangeMinutes} value={this.props.minutes} required="required"/>
                         <Highlight/>
                         <Bar/>
                         <Label htmlFor="minutes">Кол-во минут</Label>
                     </FormGroup>
-                    <Button type="submit" onClick={this.props.onAdd}>Добавить</Button>
+                    <Button type="submit" onClick={this.props.handleValidate}>Добавить</Button>
                     <Button onClick={this.props.fetchTodo}>Вызвать сагу</Button>
                 </form>
-
             </Wrapper>
+            </React.Fragment>
         )
     }
 }
@@ -176,6 +170,8 @@ function mapStateToProps(state) {
         hours:state.hours,
         minutes:state.minutes,
         task: state.task,
+        validate: state.validate,
+        error: state.error,
     }
 }
 
@@ -186,7 +182,8 @@ function mapDispatchToProps(dispatch) {
         onChangeHours: (e) => dispatch({type: 'CHANGE_HOURS', payload: e.target.value}),
         onChangeMinutes: (e) => dispatch({type: 'CHANGE_MINUTES', payload: e.target.value}),
         fetchTodo: () => dispatch({type: 'FETCH_TODO'}),
-        onAdd: () => dispatch({type:'ADD'})
+        handleValidate: () => dispatch({type: 'VALIDATE'}),
+        /*onAdd: () => dispatch({type:'ADD'})*/
     }
 }
 

@@ -1,8 +1,8 @@
 import { put, takeEvery, all, call } from 'redux-saga/effects'
 
-/*
+
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
-*/
+
 
 /*export function* consoleSaga() {
     yield delay(1000);
@@ -21,6 +21,17 @@ export function* watchIncrementAsync() {
 export function * fetchError() {
     yield put({type:'FETCH_ERROR'})
 }
+
+export function * watchValidate() {
+    yield takeEvery('VALIDATE', workerValidate)
+}
+// смотрит за событиями validate
+
+export function * workerValidate() {
+    yield delay(1000);
+    yield put({type:'ADD'});
+}
+// выполняет action add
 
 export function * watchFetchAsync() {
     yield takeEvery('FETCH_TODO', workerFetchTodo)
@@ -41,6 +52,7 @@ export function * workerFetchTodo() {
 
 export default function* rootSaga() {
     yield all([
-        watchFetchAsync()
+        watchFetchAsync(),
+        watchValidate()
     ])
 }

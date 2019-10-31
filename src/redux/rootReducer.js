@@ -4,7 +4,9 @@ const initialState = {
     minutes:'',
     /*id:0,*/
     task:[],
-    error: false
+    error: false,
+    validate: false,
+    testCounter: 0
 }
 
 export default function rootReducer(state = initialState, action) {
@@ -24,13 +26,29 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 minutes: action.payload
             }
+
+
+
+
         case 'ADD':
-            return {
-                task:[...state.task, {text: state.text, hours: state.hours, minutes: state.minutes}],
-                text:'',
-                hours:'',
-                minutes: '',
+            switch (state.error) {
+                case false :
+                    return {
+                        task: [...state.task, {text: state.text, hours: state.hours, minutes: state.minutes}],
+                        text: '',
+                        hours: '',
+                        minutes: '',
+                        validate: false,
+                        testCounter: state.testCounter + 1
+                    }
+                case true :
+                    return {
+                        ...state,
+                    }
+                default : return state
             }
+
+
         case 'REMOVE_ITEM':
             return {
                 task:[
@@ -38,17 +56,7 @@ export default function rootReducer(state = initialState, action) {
                     ...state.task.slice(action.payload + 1)
                 ]
             }
-        case 'CONSOLE_SAGA':
-            return {
-                ...state,
-                text: 'SAGA'
-            }
 
-        case 'CONSOLE_ASYNC_SAGA':
-            return {
-                ...state,
-                text: 'SAGA ASYNC'
-            }
         case 'FETCH_SUCCESS':
             return {
                 ...state,
@@ -59,6 +67,28 @@ export default function rootReducer(state = initialState, action) {
                 ... state,
                 error: true
             }
+        case 'VALIDATE' :
+            switch (state.text) {
+                case '' :
+                    return {
+                        ...state,
+                        error: true,
+                        validate: true,
+                    }
+                case '1' :
+                    return {
+                        ...state,
+                        error: true,
+                        validate: true,
+                    }
+                default:
+                    return {
+                        ...state,
+                        error: false,
+                        validate: true,
+                    }
+            }
+
         default:
             return state
     }

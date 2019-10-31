@@ -59,22 +59,22 @@ class TodoField extends React.Component {
 
     render() {
         return(
+            <React.Fragment>
+                {this.props.validate && this.props.error ? <p>Произошла ошибка, введите еще раз</p> : null}
                 <Wrapper>
-
-                    { this.props.error ? <p>Произошла ошибка</p> :
-
                         <Todo>
-                        {this.props.task.map((e,index)=>{
-                            return (
-                                <TodoItem key={index}>
-                                    <Title>{e.text}</Title>
-                                    <Time>{e.hours} : {e.minutes}</Time>
-                                    <Close icon={faTimes} size="lg" onClick={()=> this.props.removeItem(index)} />
-                                </TodoItem>
-                            )
-                        })}
-                    </Todo>}
+                            {this.props.task.map((e,index)=>{
+                                return (
+                                    <TodoItem key={index}>
+                                        <Title>{e.text}</Title>
+                                        <Time>{e.hours} : {e.minutes}</Time>
+                                        <Close icon={faTimes} size="lg" onClick={()=> this.props.removeItem(index)} />
+                                    </TodoItem>
+                                )
+                            })}
+                    </Todo>
                 </Wrapper>
+            </React.Fragment>
         )
     }
 }
@@ -82,7 +82,8 @@ class TodoField extends React.Component {
 function mapStateToProps(state) {
     return {
         task: [...state.task],
-        error: state.error
+        validate: state.validate,
+        error: state.error,
     }
 }
 
