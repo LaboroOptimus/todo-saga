@@ -2,11 +2,7 @@ import React from 'react'
 import styled from "styled-components";
 import {connect} from 'react-redux'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
-import {faCheck} from '@fortawesome/free-solid-svg-icons'
-import {faExclamationCircle} from '@fortawesome/free-solid-svg-icons'
-import {faPauseCircle} from '@fortawesome/free-solid-svg-icons'
-import {faPlay} from '@fortawesome/free-solid-svg-icons'
+import {faCheck, faExclamationCircle, faPauseCircle, faPlay, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled.div`
     display: flex;
@@ -33,7 +29,7 @@ const TodoItem = styled.div`
     margin-bottom: 10px;
     border-radius: 10px; 
     
-    ${({ active }) => active && `
+    ${({active}) => active && `
     box-shadow: 0 -200px 100px -120px #625EC9 inset;
     animation: background 3s infinite alternate;
     
@@ -118,12 +114,14 @@ class TodoField extends React.Component {
                     <Todo>
                         {this.props.task.map((e, index) => {
                             return (
-                                <TodoItem active={!e.complete && !e.pause} background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
+                                <TodoItem active={!e.complete && !e.pause}
+                                          background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
                                     <Done icon={faCheck} size="lg" onClick={() => this.props.completeItem(index)}/>
                                     <Title>{e.text}</Title>
                                     <CreationTime>{e.time}</CreationTime>
                                     <Time>{e.hours}:{e.minutes}</Time>
-                                    <Pause icon={ e.pause ? faPlay : faPauseCircle} size="lg" onClick={() => this.props.pauseItem(index)}/>
+                                    <Pause icon={e.pause ? faPlay : faPauseCircle} size="lg"
+                                           onClick={() => this.props.pauseItem(index)}/>
                                     <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index)}/>
                                 </TodoItem>
                             )

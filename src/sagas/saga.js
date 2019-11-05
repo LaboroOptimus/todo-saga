@@ -1,4 +1,5 @@
-import {put, takeEvery, all, call} from 'redux-saga/effects'
+import {all, call, put, takeEvery} from 'redux-saga/effects'
+
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
 
@@ -46,8 +47,6 @@ export function* workerFilter() {
     yield put({type: 'FILTER_TASKS'});
     console.log('Вызвал фильтр тасков');
 } // выполняем
-
-
 
 
 export function* watchFetchAsync() {

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {createStore, applyMiddleware} from "redux";
+import {applyMiddleware, createStore} from "redux";
 import createSagaMiddleware from 'redux-saga'
 /*import rootReducer from "./redux/rootReducer";*/
 import reducer from "./redux/indexReducer"; // подключаю общий редьюсер

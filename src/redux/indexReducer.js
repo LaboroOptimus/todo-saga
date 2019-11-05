@@ -4,8 +4,8 @@ import filterReducer from "./filterReducer";
 
 
 export default combineReducers({
-    root:rootReducer,
-    filter:filterReducer
+    root: rootReducer,
+    filter: filterReducer
 })
 
 

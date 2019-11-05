@@ -39,18 +39,18 @@ class Filters extends React.Component {
         console.log('выбранный фильтр:' + filter);
         return (
             <Wrapper>
-                <Filter onClick={()=>this.props.handleChangeFilter('all')}
-                        color={filter  === 'all' ? '#fff' : '#1F5C53'}
+                <Filter onClick={() => this.props.handleChangeFilter('all')}
+                        color={filter === 'all' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'all' ? '#1F5C53' : 'transparent'}>
                     <FilterName>все задачи</FilterName>
                 </Filter>
-                <Filter onClick={()=>this.props.handleChangeFilter('in work')}
+                <Filter onClick={() => this.props.handleChangeFilter('in work')}
                         color={filter === 'in work' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'in work' ? '#1F5C53' : 'transparent'}>
                     <FilterName>в работе</FilterName>
                 </Filter>
                 <Filter onClick={() => this.props.handleChangeFilter('done')}
-                        color={filter  === 'done' ? '#fff' : '#1F5C53'}
+                        color={filter === 'done' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'done' ? '#1F5C53' : 'transparent'}>
                     <FilterName>завершенные</FilterName>
                 </Filter>
@@ -58,6 +58,7 @@ class Filters extends React.Component {
         )
     }
 }
+
 //
 
 function mapStateToProps(state) {
@@ -68,8 +69,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleChangeFilter : (filter) => dispatch({type: 'CHANGE_FILTER', payload: filter}),
+        handleChangeFilter: (filter) => dispatch({type: 'CHANGE_FILTER', payload: filter}),
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Filters)
+export default connect(mapStateToProps, mapDispatchToProps)(Filters)

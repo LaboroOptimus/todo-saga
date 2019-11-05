@@ -28,7 +28,7 @@ export default function filterReducer(state = initialState, action) {
             switch (state.currentFilter) {
                 case 'all':
                     return {
-                       state// возвращаем все таски
+                        state// возвращаем все таски
                     };
 
                 case 'in work':
