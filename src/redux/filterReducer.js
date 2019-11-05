@@ -2,29 +2,60 @@ const initialState = {
     currentFilter: 'all',
 }
 
-// редьюсер 1
 export default function filterReducer(state = initialState, action) {
-    switch (action.currentFilter) {
+    switch (action.type) {
         case 'CHANGE_FILTER' :
             switch (action.payload) {
                 case 'all' :
                     return {
-                        currentFilter: 'all'
+                        currentFilter: action.payload
                     }
                 case 'in work' :
                     return {
-                        currentFilter: 'in work'
+                        currentFilter: action.payload
                     }
                 case 'done' :
                     return {
-                        currentFilter: 'done'
-                    }
+                        currentFilter: action.payload
+                    };
                 default :
                     return {
                         currentFilter: 'all'
                     }
             }
-        case 'ANOTHER_ACTION' :
+
+        case 'FILTER_TASKS' :
+            switch (state.currentFilter) {
+                case 'all':
+                    return {
+                       state// возвращаем все таски
+                    };
+
+                case 'in work':
+                    const isInWork = (item) => {
+                        if (item.complete) {
+                            return false;
+                        } else if (item.pause) {
+                            return true;
+                        } else {
+                            return true;
+                        }
+                    };
+
+                    /* let taskInWork = state.task.filter(isInWork);*/
+                    return {
+                        state // возвращаем только те, которые в работе, taskInWork
+                    };
+                case 'done':
+                    return {
+                        state // возвращаем завершенные
+                    };
+                default :
+                    return {
+                        state // дефолт
+                    };
+            }
+
         default:
             return state
     }

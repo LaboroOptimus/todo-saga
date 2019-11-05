@@ -168,12 +168,12 @@ class TodoInput extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        text: state.text,
-        hours: state.hours,
-        minutes: state.minutes,
-        task: state.task,
-        validate: state.validate,
-        error: state.error,
+        text: state.root.text,
+        hours: state.root.hours,
+        minutes: state.root.minutes,
+        task: state.root.task,
+        validate: state.root.validate,
+        error: state.root.error,
     }
 }
 

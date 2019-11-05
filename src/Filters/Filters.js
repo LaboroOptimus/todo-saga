@@ -8,7 +8,7 @@ const Wrapper = styled.div`
     justify-content: center;
 `;
 
-const Filter = styled.div`
+const Filter = styled.button`
     background-color: ${props => props.backgroundColor};
     color: ${props => props.color}; /*#1F5C53;*/
     border: 2px solid #1F5C53;
@@ -16,6 +16,14 @@ const Filter = styled.div`
     margin-right: 10px;
     padding: 5px 8px;
     border-radius: 20px;
+    
+    :hover {
+    cursor:pointer;
+    }
+    
+    :focus {
+     outline: 0;
+    }
  
 `;
 
@@ -26,23 +34,23 @@ const FilterName = styled.span`
 
 class Filters extends React.Component {
 
-    handleClick = (e) => {
-
-    }
-
     render() {
         const filter = this.props.currentFilter;
+        console.log('выбранный фильтр:' + filter);
         return (
             <Wrapper>
-                <Filter onClick={()=> this.handleChangeFilter('all')} color={filter === 'all' ? '#fff' : '#1F5C53'}
+                <Filter onClick={()=>this.props.handleChangeFilter('all')}
+                        color={filter  === 'all' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'all' ? '#1F5C53' : 'transparent'}>
                     <FilterName>все задачи</FilterName>
                 </Filter>
-                <Filter onClick={()=> this.handleChangeFilter('in work')} color={filter === 'in work' ? '#fff' : '#1F5C53'}
+                <Filter onClick={()=>this.props.handleChangeFilter('in work')}
+                        color={filter === 'in work' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'in work' ? '#1F5C53' : 'transparent'}>
                     <FilterName>в работе</FilterName>
                 </Filter>
-                <Filter onClick={()=> this.handleChangeFilter('done')} color={filter === 'done' ? '#fff' : '#1F5C53'}
+                <Filter onClick={() => this.props.handleChangeFilter('done')}
+                        color={filter  === 'done' ? '#fff' : '#1F5C53'}
                         backgroundColor={filter === 'done' ? '#1F5C53' : 'transparent'}>
                     <FilterName>завершенные</FilterName>
                 </Filter>
@@ -50,10 +58,11 @@ class Filters extends React.Component {
         )
     }
 }
+//
 
 function mapStateToProps(state) {
     return {
-        currentFilter: state.currentFilter
+        currentFilter: state.filter.currentFilter
     }
 }
 

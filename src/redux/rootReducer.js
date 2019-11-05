@@ -6,8 +6,6 @@ const initialState = {
     error: false,
     validate: false,
     errorsTypes: [],
-    currentFilter:'all',
-
 }
 
 export default function rootReducer(state = initialState, action) {
@@ -30,13 +28,24 @@ export default function rootReducer(state = initialState, action) {
         case 'ADD':
             switch (state.error) {
                 case false :
+
+                    const time = new Date();
+                    const hNow = time.getHours();
+                    const mNow = time.getMinutes();
+
                     return {
-                        task: [...state.task, {text: state.text, hours: state.hours, minutes: state.minutes}],
+                        task: [...state.task, {
+                            text: state.text,
+                            hours: state.hours,
+                            minutes: state.minutes,
+                            time: hNow + ':' + mNow,
+                            complete: false,
+                            pause: false
+                        }],
                         text: '',
                         hours: '',
                         minutes: '',
                         validate: false,
-                        //...state
                         errorsTypes: []
                     }
                 case true :
@@ -54,6 +63,35 @@ export default function rootReducer(state = initialState, action) {
                     ...state.task.slice(0, action.payload),
                     ...state.task.slice(action.payload + 1)
                 ],
+                errorsTypes: []
+            }
+
+        case 'COMPLETE_ITEM':
+            let newTask = [...state.task];
+            for (let i = 0; i < newTask.length; i++) {
+                if (i === action.payload) {
+                    newTask[i].complete = true
+                }
+            }
+            return {
+                task: newTask,
+                errorsTypes: []
+            }
+
+        case 'PAUSE_ITEM':
+            let pauseTasks = [...state.task];
+            for (let i = 0; i < pauseTasks.length; i++) {
+                if (i === action.payload && !pauseTasks[i].complete) {
+                    if (pauseTasks[i].pause) {
+                        pauseTasks[i].pause = false
+                    } else {
+                        pauseTasks[i].pause = true
+                    }
+
+                }
+            }
+            return {
+                task: pauseTasks,
                 errorsTypes: []
             }
 

@@ -3,9 +3,9 @@ import rootReducer from './rootReducer'
 import filterReducer from "./filterReducer";
 
 
-export const reducer = combineReducers({
-    rootReducer,
-    filterReducer
+export default combineReducers({
+    root:rootReducer,
+    filter:filterReducer
 })
 
 

@@ -1,7 +1,5 @@
 import {put, takeEvery, all, call} from 'redux-saga/effects'
-
-
-//const delay = (ms) => new Promise(res => setTimeout(res, ms))
+const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
 
 /*export function* consoleSaga() {
@@ -37,6 +35,21 @@ export function* workerValidate() {
 
 // выполняет action add
 
+
+export function* watchFilters() {
+    yield takeEvery('CHANGE_FILTER', workerFilter);
+    console.log('произошла смена фильтра');
+} // смотрим за каждым событием изменения фильтра
+
+export function* workerFilter() {
+    yield delay(500)
+    yield put({type: 'FILTER_TASKS'});
+    console.log('Вызвал фильтр тасков');
+} // выполняем
+
+
+
+
 export function* watchFetchAsync() {
     yield takeEvery('FETCH_TODO', workerFetchTodo)
 }
@@ -57,6 +70,7 @@ export function* workerFetchTodo() {
 export default function* rootSaga() {
     yield all([
         watchFetchAsync(),
-        watchValidate()
+        watchValidate(),
+        watchFilters()
     ])
 }
