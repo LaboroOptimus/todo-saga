@@ -100,6 +100,11 @@ const ErrorIcon = styled(FontAwesomeIcon)`
 
 
 class TodoField extends React.Component {
+
+    componentDidMount() {
+        this.props.loadData();
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -111,6 +116,7 @@ class TodoField extends React.Component {
                     )
                 })}
                 <Wrapper>
+
                     <Todo>
                         {this.props.task.map((e, index) => {
                             return (
@@ -139,21 +145,15 @@ function mapStateToProps(state) {
         validate: state.root.validate,
         error: state.root.error,
         errorsTypes: state.root.errorsTypes,
+        currentFilter: state.filter.currentFilter
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     removeItem: index => dispatch({type: 'REMOVE_ITEM', payload: index}),
     completeItem: index => dispatch({type: 'COMPLETE_ITEM', payload: index}),
-    pauseItem: index => dispatch({type: 'PAUSE_ITEM', payload: index})
+    pauseItem: index => dispatch({type: 'PAUSE_ITEM', payload: index}),
+    loadData: () => dispatch({type: 'LOAD'}),
 })
-
-
-/*function mapDispatchToProps(dispatch) {
-    return {
-        removeItem: (id) => dispatch({type: 'REMOVE_ITEM', payload:id})
-    }
-}*/
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoField)

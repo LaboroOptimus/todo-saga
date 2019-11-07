@@ -1,3 +1,6 @@
+import axios from 'axios'
+
+
 const initialState = {
     text: '',
     hours: '',
@@ -10,6 +13,11 @@ const initialState = {
 
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case 'ADD_DATA':
+            console.log('пришло: ' + action.payload);
+            return {
+                ...state,
+            }
         case 'CHANGE_TEXT':
             return {
                 ...state,
@@ -28,10 +36,24 @@ export default function rootReducer(state = initialState, action) {
         case 'ADD':
             switch (state.error) {
                 case false :
-
                     const time = new Date();
                     const hNow = time.getHours();
                     const mNow = time.getMinutes();
+
+                    const data = {
+                        text: state.text,
+                        hours: state.hours,
+                        minutes: state.minutes,
+                        time: hNow + ':' + mNow,
+                        complete: false,
+                        pause: false
+                    }
+
+                    axios.post('https://todo-saga-987da.firebaseio.com/todo.json', data)
+                        .then(response => {
+                            console.log(response)
+                        })
+                        .catch(error => console.log(error))
 
                     return {
                         task: [...state.task, {
@@ -55,9 +77,19 @@ export default function rootReducer(state = initialState, action) {
                 default :
                     return state
             }
-
-
         case 'REMOVE_ITEM':
+            const data = {
+                ...state.task.slice(0, action.payload),
+                ...state.task.slice(action.payload + 1)
+            }
+            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
+            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', data)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => console.log(error))
+
+
             return {
                 task: [
                     ...state.task.slice(0, action.payload),
@@ -65,7 +97,6 @@ export default function rootReducer(state = initialState, action) {
                 ],
                 errorsTypes: []
             }
-
         case 'COMPLETE_ITEM':
             let newTask = [...state.task];
             for (let i = 0; i < newTask.length; i++) {
@@ -73,11 +104,17 @@ export default function rootReducer(state = initialState, action) {
                     newTask[i].complete = true
                 }
             }
+            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
+            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', newTask)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => console.log(error))
+
             return {
                 task: newTask,
                 errorsTypes: []
             }
-
         case 'PAUSE_ITEM':
             let pauseTasks = [...state.task];
             for (let i = 0; i < pauseTasks.length; i++) {
@@ -90,11 +127,16 @@ export default function rootReducer(state = initialState, action) {
 
                 }
             }
+            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
+            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', pauseTasks)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => console.log(error))
             return {
                 task: pauseTasks,
                 errorsTypes: []
             }
-
         case 'FETCH_SUCCESS':
             return {
                 ...state,
@@ -105,7 +147,58 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 error: true
             };
-        case 'VALIDATE' :
+        case 'FILTER_TASKS' :
+            switch (action.payload) {
+                case 'in work':
+                    const isInWork = (item) => {
+                        if (item.complete) {
+                            return 1;
+                        } else {
+                            return -1
+                        }
+                    }
+
+                    let taskInWork = state.task.sort(isInWork);
+                    return {
+                        ...state,
+                        task: taskInWork
+                    };
+                case 'done':
+                    const isDone = (item) => {
+                        if (item.complete) {
+                            return -1
+                        } else {
+                            return 1
+                        }
+                    };
+
+                    let taskIsDone = state.task.sort(isDone);
+                    return {
+                        ...state,
+                        task: taskIsDone,
+                    };
+
+                case 'pause':
+                    const isPause = (item) => {
+                        if (item.pause) {
+                            return -1
+                        } else {
+                            return 1
+                        }
+                    }
+
+                    let isOnPause = state.task.sort(isPause);
+                    return {
+                        ...state,
+                        task: isOnPause,
+                    }
+
+                default :
+                    return {
+                        ...state,
+                    };
+            }
+        case 'VALIDATE':
             const errors = [];
             const validate = (text, hours, minutes) => {
                 let i = 0;
@@ -123,7 +216,6 @@ export default function rootReducer(state = initialState, action) {
                 }
                 return i <= 0;
             }
-
             switch (validate(state.text, state.hours, state.minutes)) {
                 case false :
                     return {
@@ -148,7 +240,9 @@ export default function rootReducer(state = initialState, action) {
                     }
             }
 
+
         default:
             return state
     }
 }
+

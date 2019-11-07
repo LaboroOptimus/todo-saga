@@ -17,6 +17,7 @@ const store = createStore(
     applyMiddleware(sagaMiddleware)
 );
 
+
 sagaMiddleware.run(rootSaga)
 
 const app = (
