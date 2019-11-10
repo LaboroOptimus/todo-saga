@@ -32,31 +32,28 @@ const FilterName = styled.span`
        padding: 0;
 `;
 
-class Filters extends React.Component {
-
-    render() {
-        const filter = this.props.currentFilter;
-        console.log('выбранный фильтр:' + filter);
-        return (
-            <Wrapper>
-                <Filter onClick={() => this.props.filterTasks('in work')}
-                        color={filter === 'in work' ? '#fff' : '#1F5C53'}
-                        backgroundColor={filter === 'in work' ? '#1F5C53' : 'transparent'}>
-                    <FilterName>в работе</FilterName>
-                </Filter>
-                <Filter onClick={() => this.props.filterTasks('done')}
-                        color={filter === 'done' ? '#fff' : '#1F5C53'}
-                        backgroundColor={filter === 'done' ? '#1F5C53' : 'transparent'}>
-                    <FilterName>завершенные</FilterName>
-                </Filter>
-                <Filter onClick={() => this.props.filterTasks('pause')}
-                        color={filter === 'done' ? '#fff' : '#1F5C53'}
-                        backgroundColor={filter === 'done' ? '#1F5C53' : 'transparent'}>
-                    <FilterName>на паузе</FilterName>
-                </Filter>
-            </Wrapper>
-        )
-    }
+function Filters(props) {
+    const filter = props.currentFilter;
+    console.log('выбранный фильтр:' + filter);
+    return (
+        <Wrapper>
+            <Filter onClick={() => props.filterTasks('in work')}
+                    color={filter === 'in work' ? '#fff' : '#1F5C53'}
+                    backgroundColor={filter === 'in work' ? '#1F5C53' : 'transparent'}>
+                <FilterName>в работе</FilterName>
+            </Filter>
+            <Filter onClick={() => props.filterTasks('done')}
+                    color={filter === 'done' ? '#fff' : '#1F5C53'}
+                    backgroundColor={filter === 'done' ? '#1F5C53' : 'transparent'}>
+                <FilterName>завершенные</FilterName>
+            </Filter>
+            <Filter onClick={() => props.filterTasks('pause')}
+                    color={filter === 'pause' ? '#fff' : '#1F5C53'}
+                    backgroundColor={filter === 'pause' ? '#1F5C53' : 'transparent'}>
+                <FilterName>на паузе</FilterName>
+            </Filter>
+        </Wrapper>
+    )
 }
 
 function mapStateToProps(state) {

@@ -14,9 +14,18 @@ const initialState = {
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_DATA':
-            console.log('пришло: ' + action.payload);
-            return {
+            console.log('пришло: ', action.payload);
+            let fetch_data = [];
+
+            for(let key in action.payload){
+                fetch_data.push(action.payload[key]);
+            }
+
+          console.log(fetch_data);
+                return {
                 ...state,
+                    task: fetch_data
+
             }
         case 'CHANGE_TEXT':
             return {

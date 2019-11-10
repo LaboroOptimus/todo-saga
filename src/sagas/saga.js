@@ -41,12 +41,12 @@ export function* watchFilters() {
     // console.log('произошла смена фильтра из саги');
 }
 
-export function* workerFilter() {
-    //yield delay(1000);
-    // const filter = yield select(currentFilter);
+export function* workerFilter(data) {
+    console.log(data);
+    //const filter = yield select(currentFilter);
     //console.log('сага передает' + filter);
-    yield put({type: 'CHANGE_FILTER'});
-    console.log('Вызвал фильтр тасков из саги');
+    yield put({type: 'CHANGE_FILTER', payload:data.payload});
+
 }
 
 export function* watchFetchAsync() {
