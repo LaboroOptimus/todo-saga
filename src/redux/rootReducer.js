@@ -48,8 +48,11 @@ export default function rootReducer(state = initialState, action) {
             switch (state.error) {
                 case false :
                     const time = new Date();
-                    const hNow = time.getHours();
-                    const mNow = time.getMinutes();
+                    let hNow = time.getHours();
+                    let mNow = time.getMinutes();
+                    if(+mNow < 10){
+                        mNow = '0' + mNow;
+                    }
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
                     let id = Math.round(rand);
 
