@@ -1,4 +1,6 @@
 import axios from 'axios'
+import firebase from '../firebase.js'
+import {orderByChild,equalTo} from 'firebase'
 
 
 const initialState = {
@@ -14,14 +16,14 @@ const initialState = {
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_DATA':
-            console.log('пришло: ', action.payload);
+           // console.log('пришло: ', action.payload);
             let fetch_data = [];
 
             for(let key in action.payload){
                 fetch_data.push(action.payload[key]);
             }
 
-          console.log(fetch_data);
+          // console.log(fetch_data);
                 return {
                 ...state,
                     task: fetch_data
@@ -48,6 +50,8 @@ export default function rootReducer(state = initialState, action) {
                     const time = new Date();
                     const hNow = time.getHours();
                     const mNow = time.getMinutes();
+                    let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
+                    let id = Math.round(rand);
 
                     const data = {
                         text: state.text,
@@ -55,10 +59,11 @@ export default function rootReducer(state = initialState, action) {
                         minutes: state.minutes,
                         time: hNow + ':' + mNow,
                         complete: false,
-                        pause: false
+                        pause: true,
+                        id: id
                     }
 
-                    axios.post('https://todo-saga-987da.firebaseio.com/todo.json', data)
+                    axios.post(`https://todo-saga-987da.firebaseio.com/todo.json`, data)
                         .then(response => {
                             console.log(response)
                         })
@@ -71,7 +76,8 @@ export default function rootReducer(state = initialState, action) {
                             minutes: state.minutes,
                             time: hNow + ':' + mNow,
                             complete: false,
-                            pause: false
+                            pause: true,
+                            id: id
                         }],
                         text: '',
                         hours: '',
@@ -87,38 +93,39 @@ export default function rootReducer(state = initialState, action) {
                     return state
             }
         case 'REMOVE_ITEM':
-            const data = {
-                ...state.task.slice(0, action.payload),
-                ...state.task.slice(action.payload + 1)
-            }
-            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
-            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', data)
-                .then(response => {
-                    console.log(response)
+
+            /*axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');*/
+            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+                snapshot.forEach(function(child) {
+                    child.ref.remove();
+                    console.log("Removed!");
                 })
-                .catch(error => console.log(error))
+            });
 
 
             return {
                 task: [
-                    ...state.task.slice(0, action.payload),
-                    ...state.task.slice(action.payload + 1)
+                    ...state.task.slice(0, action.payload.index),
+                    ...state.task.slice(action.payload.index + 1)
                 ],
                 errorsTypes: []
             }
         case 'COMPLETE_ITEM':
             let newTask = [...state.task];
             for (let i = 0; i < newTask.length; i++) {
-                if (i === action.payload) {
+                if (newTask[i].id === action.payload.id) {
                     newTask[i].complete = true
                 }
             }
-            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
-            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', newTask)
-                .then(response => {
-                    console.log(response)
+
+            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+                snapshot.forEach(function(child) {
+                    child.ref.update({
+                        complete: true
+                    });
+                    console.log("Set Complete");
                 })
-                .catch(error => console.log(error))
+            });
 
             return {
                 task: newTask,
@@ -126,22 +133,37 @@ export default function rootReducer(state = initialState, action) {
             }
         case 'PAUSE_ITEM':
             let pauseTasks = [...state.task];
+            let pause = false;
             for (let i = 0; i < pauseTasks.length; i++) {
-                if (i === action.payload && !pauseTasks[i].complete) {
+                if (pauseTasks[i].id === action.payload.id && !pauseTasks[i].complete) {
                     if (pauseTasks[i].pause) {
-                        pauseTasks[i].pause = false
+                        pause = false;
+                        pauseTasks[i].pause = pause;
                     } else {
-                        pauseTasks[i].pause = true
+                        pause = true;
+                        pauseTasks[i].pause = pause;
                     }
 
                 }
             }
-            axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
+            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+                snapshot.forEach(function(child) {
+                    child.ref.update({
+                        pause: pause
+                    });
+                    console.log("Set Pause");
+                })
+            });
+
+
+
+
+            /* axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
             axios.post('https://todo-saga-987da.firebaseio.com/todo.json', pauseTasks)
                 .then(response => {
                     console.log(response)
                 })
-                .catch(error => console.log(error))
+                .catch(error => console.log(error)) */
             return {
                 task: pauseTasks,
                 errorsTypes: []

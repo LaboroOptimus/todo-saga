@@ -122,13 +122,13 @@ class TodoField extends React.Component {
                             return (
                                 <TodoItem active={!e.complete && !e.pause}
                                           background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
-                                    <Done icon={faCheck} size="lg" onClick={() => this.props.completeItem(index)}/>
+                                    <Done icon={faCheck} size="lg" onClick={() => this.props.completeItem(index,e.id)}/>
                                     <Title>{e.text}</Title>
                                     <CreationTime>{e.time}</CreationTime>
                                     <Time>{e.hours}:{e.minutes}</Time>
                                     <Pause icon={e.pause ? faPlay : faPauseCircle} size="lg"
-                                           onClick={() => this.props.pauseItem(index)}/>
-                                    <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index)}/>
+                                           onClick={() => this.props.pauseItem(index,e.id)}/>
+                                    <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index, e.id)}/>
                                 </TodoItem>
                             )
                         })}
@@ -150,9 +150,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    removeItem: index => dispatch({type: 'REMOVE_ITEM', payload: index}),
-    completeItem: index => dispatch({type: 'COMPLETE_ITEM', payload: index}),
-    pauseItem: index => dispatch({type: 'PAUSE_ITEM', payload: index}),
+    removeItem: (index,id) => dispatch({type: 'REMOVE_ITEM', payload: {index, id}}),
+    completeItem: (index,id) => dispatch({type: 'COMPLETE_ITEM', payload: {index,id}}),
+    pauseItem: (index,id) => dispatch({type: 'PAUSE_ITEM', payload: {index,id}}),
     loadData: () => dispatch({type: 'LOAD'}),
 })
 
