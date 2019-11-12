@@ -1,7 +1,5 @@
 import axios from 'axios'
 import firebase from '../firebase.js'
-import {orderByChild,equalTo} from 'firebase'
-
 
 const initialState = {
     text: '',
@@ -11,12 +9,27 @@ const initialState = {
     error: false,
     validate: false,
     errorsTypes: [],
+    isLogin: false,
+    user_email:''
 }
+
+let user = '';
+if(localStorage.getItem('user') === null){
+    user = ''
+}
+else {
+    user = localStorage.getItem('user').replace(/\./gi, '');
+};
+
+console.log('юзер', user)
+/*let user = localStorage.getItem('user');
+user = user.replace(/\./gi, '');*/
+//console.log('путь: ', user);
 
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_DATA':
-           // console.log('пришло: ', action.payload);
+            //onsole.log('пришло: ', action.payload.user_email);
             let fetch_data = [];
 
             for(let key in action.payload){
@@ -63,10 +76,12 @@ export default function rootReducer(state = initialState, action) {
                         time: hNow + ':' + mNow,
                         complete: false,
                         pause: true,
-                        id: id
+                        id: id,
+                        user_email: state.user_email,
                     }
+                   // const user = localStorage.getItem('user');
 
-                    axios.post(`https://todo-saga-987da.firebaseio.com/todo.json`, data)
+                    axios.post(`https://todo-saga-987da.firebaseio.com/todo/${user}.json`, data)
                         .then(response => {
                             console.log(response)
                         })
@@ -80,7 +95,8 @@ export default function rootReducer(state = initialState, action) {
                             time: hNow + ':' + mNow,
                             complete: false,
                             pause: true,
-                            id: id
+                            id: id,
+                            user_email: state.user_email
                         }],
                         text: '',
                         hours: '',
@@ -97,8 +113,10 @@ export default function rootReducer(state = initialState, action) {
             }
         case 'REMOVE_ITEM':
 
+
+
             /*axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');*/
-            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
                 snapshot.forEach(function(child) {
                     child.ref.remove();
                     console.log("Removed!");
@@ -121,7 +139,9 @@ export default function rootReducer(state = initialState, action) {
                 }
             }
 
-            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+
+
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
                 snapshot.forEach(function(child) {
                     child.ref.update({
                         complete: true
@@ -149,7 +169,7 @@ export default function rootReducer(state = initialState, action) {
 
                 }
             }
-            firebase.database().ref('todo').orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
                 snapshot.forEach(function(child) {
                     child.ref.update({
                         pause: pause
@@ -272,6 +292,19 @@ export default function rootReducer(state = initialState, action) {
                         validate: true,
                         errorsTypes: []
                     }
+            }
+        case 'LOGIN':
+            localStorage.setItem('user',`${state.user_email}`);
+            user = localStorage.getItem('user');
+            user = user.replace(/\./gi, '');
+            return {
+                ...state,
+                isLogin: true,
+            }
+        case 'CHANGE_EMAIL' :
+            return {
+                ...state,
+                user_email: action.payload
             }
 
 

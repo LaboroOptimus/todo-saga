@@ -1,6 +1,6 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React from 'react';
 import styled, {keyframes} from 'styled-components';
+import {connect} from "react-redux";
 
 const Wrapper = styled.div`
     padding-top: 30px;
@@ -32,6 +32,7 @@ const Button = styled.button`
     cursor: pointer;
   }
 `;
+
 
 
 const Label = styled.label`
@@ -128,36 +129,21 @@ const FormGroup = styled.div`
     margin-bottom: 45px; 
 `;
 
-class TodoInput extends React.Component {
-    render() {
-        return (
+class Login extends React.Component {
+    render(){
+        return(
             <Wrapper>
                 <form onSubmit={(e) => {
                     e.preventDefault()
                 }}>
                     <FormGroup>
-                        <Input type="text" onChange={this.props.onChangeText} value={this.props.text}
+                        <Input type="text" onChange={this.props.onChangeEmail} value={this.props.user_email}
                                required="required"/>
                         <Highlight/>
                         <Bar/>
-                        <Label htmlFor="hours">Введите название задачи</Label>
+                        <Label htmlFor="hours">Введите email для входа</Label>
                     </FormGroup>
-                    <FormGroup>
-                        <Input type="text" name="hours" onChange={this.props.onChangeHours} value={this.props.hours}
-                               required="required"/>
-                        <Highlight/>
-                        <Bar/>
-                        <Label htmlFor="hours">Кол-во часов</Label>
-                    </FormGroup>
-                    <FormGroup>
-                        <Input type="text" name="minutes" onChange={this.props.onChangeMinutes}
-                               value={this.props.minutes} required="required"/>
-                        <Highlight/>
-                        <Bar/>
-                        <Label htmlFor="minutes">Кол-во минут</Label>
-                    </FormGroup>
-                    <Button onClick={this.props.handleValidate}>Добавить</Button>
-                    <Button onClick={this.props.fetchTodo}>Вызвать сагу</Button>
+                    <Button type="submit" onClick={this.props.onLogin}>Войти</Button>
                 </form>
             </Wrapper>
         )
@@ -166,24 +152,17 @@ class TodoInput extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        text: state.root.text,
-        hours: state.root.hours,
-        minutes: state.root.minutes,
-        task: state.root.task,
-        validate: state.root.validate,
-        error: state.root.error,
+        isLogin: state.root.isLogin,
+        user_email: state.root.user_email
     }
 }
 
 
 function mapDispatchToProps(dispatch) {
     return {
-        onChangeText: (e) => dispatch({type: 'CHANGE_TEXT', payload: e.target.value}),
-        onChangeHours: (e) => dispatch({type: 'CHANGE_HOURS', payload: e.target.value}),
-        onChangeMinutes: (e) => dispatch({type: 'CHANGE_MINUTES', payload: e.target.value}),
-        fetchTodo: () => dispatch({type: 'FETCH_TODO'}),
-        handleValidate: () => dispatch({type: 'VALIDATE'}),
+        onLogin: () => dispatch({type: 'LOGIN'}),
+        onChangeEmail : (e) => dispatch({type:'CHANGE_EMAIL', payload: e.target.value})
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoInput)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -23,8 +23,9 @@ export function* watchLoad(){
 
 export function* workerLoadData() {
     try {
+        let user = localStorage.getItem('user').replace(/\./gi, '');
         const data = yield call(() => {
-                return fetch('https://todo-saga-987da.firebaseio.com/todo.json')
+                return fetch(`https://todo-saga-987da.firebaseio.com/todo/${user}.json`)
                     .then(res => res.json())
             }
         );
