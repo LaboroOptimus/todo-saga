@@ -127,12 +127,12 @@ class TodoField extends React.Component {
                             return (
                                 <TodoItem active={!e.complete && !e.pause}
                                           background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
-                                    <Done icon={faCheck} size="md"
+                                    <Done icon={faCheck}
                                           onClick={() => this.props.completeItem(index, e.id)}/>
                                     <Title>{e.text}</Title>
                                     <CreationTime>Создано: {e.time}</CreationTime>
                                     <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
-                                    <Pause icon={e.pause ? faPlay : faPauseCircle} size="md"
+                                    <Pause icon={e.pause ? faPlay : faPauseCircle}
                                            onClick={() => this.props.pauseItem(index, e.id)}/>
                                     <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index, e.id)}/>
                                 </TodoItem>
