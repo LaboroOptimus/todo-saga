@@ -36,18 +36,17 @@ const Menu = (props) => {
             <ExitButton onClick={props.handleExit} type={'submit'}>Выйти из приложения</ExitButton>
         </Wrapper>
     )
-}
+};
 
 const mapStateToProps = (state) => {
     return {
         user_email: state.root.user_email
     }
-}
-
+};
 
 const mapDispatchToProps = dispatch => ({
-    handleExit: () => dispatch({type:"EXIT"})
-})
+    handleExit: () => dispatch({type: "EXIT"})
+});
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu)

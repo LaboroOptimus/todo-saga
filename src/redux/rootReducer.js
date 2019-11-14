@@ -10,17 +10,15 @@ const initialState = {
     validate: false,
     errorsTypes: [],
     isLogin: false,
-    user_email:''
-}
-
-let user = '';
-if(localStorage.getItem('user') === null){
-    user = ''
-}
-else {
-    user = localStorage.getItem('user').replace(/\./gi, '');
+    user_email: ''
 };
 
+let user = '';
+if (localStorage.getItem('user') === null) {
+    user = ''
+} else {
+    user = localStorage.getItem('user').replace(/\./gi, '');
+}
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         case 'EXIT':
@@ -29,21 +27,21 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 user_email: '',
                 isLogin: false
-            }
+            };
         case 'ADD_DATA':
             //onsole.log('пришло: ', action.payload.user_email);
             let fetch_data = [];
 
-            for(let key in action.payload){
+            for (let key in action.payload) {
                 fetch_data.push(action.payload[key]);
             }
 
-          // console.log(fetch_data);
-                return {
+            // console.log(fetch_data);
+            return {
                 ...state,
-                    task: fetch_data
+                task: fetch_data
 
-            }
+            };
         case 'CHANGE_TEXT':
             return {
                 ...state,
@@ -65,7 +63,7 @@ export default function rootReducer(state = initialState, action) {
                     const time = new Date();
                     let hNow = time.getHours();
                     let mNow = time.getMinutes();
-                    if(+mNow < 10){
+                    if (+mNow < 10) {
                         mNow = '0' + mNow;
                     }
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
@@ -80,14 +78,14 @@ export default function rootReducer(state = initialState, action) {
                         pause: true,
                         id: id,
                         user_email: state.user_email,
-                    }
-                   // const user = localStorage.getItem('user');
+                    };
+                    // const user = localStorage.getItem('user');
 
                     axios.post(`https://todo-saga-987da.firebaseio.com/todo/${user}.json`, data)
                         .then(response => {
                             console.log(response)
                         })
-                        .catch(error => console.log(error))
+                        .catch(error => console.log(error));
 
                     return {
                         task: [...state.task, {
@@ -105,21 +103,20 @@ export default function rootReducer(state = initialState, action) {
                         minutes: '',
                         validate: false,
                         errorsTypes: []
-                    }
+                    };
                 case true :
                     return {
                         ...state,
-                    }
+                    };
                 default :
                     return state
             }
         case 'REMOVE_ITEM':
 
 
-
             /*axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');*/
-            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
-                snapshot.forEach(function(child) {
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
+                snapshot.forEach(function (child) {
                     child.ref.remove();
                     console.log("Removed!");
                 })
@@ -132,7 +129,7 @@ export default function rootReducer(state = initialState, action) {
                     ...state.task.slice(action.payload.index + 1)
                 ],
                 errorsTypes: []
-            }
+            };
         case 'COMPLETE_ITEM':
             let newTask = [...state.task];
             for (let i = 0; i < newTask.length; i++) {
@@ -142,9 +139,8 @@ export default function rootReducer(state = initialState, action) {
             }
 
 
-
-            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
-                snapshot.forEach(function(child) {
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
+                snapshot.forEach(function (child) {
                     child.ref.update({
                         complete: true
                     });
@@ -155,7 +151,7 @@ export default function rootReducer(state = initialState, action) {
             return {
                 task: newTask,
                 errorsTypes: []
-            }
+            };
         case 'PAUSE_ITEM':
             let pauseTasks = [...state.task];
             let pause = false;
@@ -171,16 +167,14 @@ export default function rootReducer(state = initialState, action) {
 
                 }
             }
-            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function(snapshot) {
-                snapshot.forEach(function(child) {
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
+                snapshot.forEach(function (child) {
                     child.ref.update({
                         pause: pause
                     });
                     console.log("Set Pause");
                 })
             });
-
-
 
 
             /* axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
@@ -192,7 +186,7 @@ export default function rootReducer(state = initialState, action) {
             return {
                 task: pauseTasks,
                 errorsTypes: []
-            }
+            };
         case 'FETCH_SUCCESS':
             return {
                 ...state,
@@ -212,7 +206,7 @@ export default function rootReducer(state = initialState, action) {
                         } else {
                             return -1
                         }
-                    }
+                    };
 
                     let taskInWork = state.task.sort(isInWork);
                     return {
@@ -241,13 +235,13 @@ export default function rootReducer(state = initialState, action) {
                         } else {
                             return 1
                         }
-                    }
+                    };
 
                     let isOnPause = state.task.sort(isPause);
                     return {
                         ...state,
                         task: isOnPause,
-                    }
+                    };
 
                 default :
                     return {
@@ -271,7 +265,7 @@ export default function rootReducer(state = initialState, action) {
                     i++;
                 }
                 return i <= 0;
-            }
+            };
             switch (validate(state.text, state.hours, state.minutes)) {
                 case false :
                     return {
@@ -296,18 +290,18 @@ export default function rootReducer(state = initialState, action) {
                     }
             }
         case 'LOGIN':
-            localStorage.setItem('user',`${state.user_email}`);
+            localStorage.setItem('user', `${state.user_email}`);
             user = localStorage.getItem('user');
             user = user.replace(/\./gi, '');
             return {
                 ...state,
                 isLogin: true,
-            }
+            };
         case 'CHANGE_EMAIL' :
             return {
                 ...state,
                 user_email: action.payload
-            }
+            };
 
 
         default:

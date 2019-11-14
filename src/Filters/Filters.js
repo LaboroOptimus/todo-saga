@@ -34,7 +34,6 @@ const FilterName = styled.span`
 
 function Filters(props) {
     const filter = props.currentFilter;
-    console.log('выбранный фильтр:' + filter);
     return (
         <Wrapper>
             <Filter onClick={() => props.filterTasks('in work')}

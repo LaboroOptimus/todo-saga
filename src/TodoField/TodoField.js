@@ -160,6 +160,6 @@ const mapDispatchToProps = dispatch => ({
     completeItem: (index, id) => dispatch({type: 'COMPLETE_ITEM', payload: {index, id}}),
     pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
     loadData: () => dispatch({type: 'LOAD'}),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoField)

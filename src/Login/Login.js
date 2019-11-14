@@ -14,7 +14,6 @@ const Button = styled.button`
   background: #5264AE;
   color: #fff;
   font-weight: bold;
-  
   text-decoration: none;
   font-size: 14px;
   line-height: 38px;
@@ -32,8 +31,6 @@ const Button = styled.button`
     cursor: pointer;
   }
 `;
-
-
 
 const Label = styled.label`
   color: #999; 
@@ -69,23 +66,23 @@ const Bar = styled.span`
   width: 300px;
   
   :before, :after {
-  content: '';
-  height: 2px; 
-  width: 0;
-  bottom: 1px; 
-  position: absolute;
-  background: #5264AE; 
-  transition: 0.2s ease all; 
-  -moz-transition: 0.2s ease all; 
-  -webkit-transition: 0.2s ease all;
+      content: '';
+      height: 2px; 
+      width: 0;
+      bottom: 1px; 
+      position: absolute;
+      background: #5264AE; 
+      transition: 0.2s ease all; 
+      -moz-transition: 0.2s ease all; 
+      -webkit-transition: 0.2s ease all;
   }
   
   :before {
-  left:50%;
+    left:50%;
   }
   
   :after {
-  right:50%; 
+    right:50%; 
   }
 `;
 
@@ -106,20 +103,15 @@ const Input = styled.input`
   }
   
   :focus ~ ${Highlight} {
-  -webkit-animation: ${animationHighlight} 0.3s ease;
-  -moz-animation: ${animationHighlight}  0.3s ease;
-  animation: ${animationHighlight} 0.3s ease;
-}
+    -webkit-animation: ${animationHighlight} 0.3s ease;
+    -moz-animation: ${animationHighlight}  0.3s ease;
+    animation: ${animationHighlight} 0.3s ease;
+   }
   
   :focus~${Label}, &:valid ~ ${Label} {
-      top: -20px;
-      font-size: 14px;
-      color: #5264AE;
-  }
-  {
-      top: -20px;
-      font-size: 14px;
-      color: #5264AE;
+     top: -20px;
+     font-size: 14px;
+     color: #5264AE;
   }
 `;
 
@@ -129,25 +121,23 @@ const FormGroup = styled.div`
     margin-bottom: 45px; 
 `;
 
-class Login extends React.Component {
-    render(){
-        return(
-            <Wrapper>
-                <form onSubmit={(e) => {
-                    e.preventDefault()
-                }}>
-                    <FormGroup>
-                        <Input type="text" onChange={this.props.onChangeEmail} value={this.props.user_email}
-                               required="required"/>
-                        <Highlight/>
-                        <Bar/>
-                        <Label htmlFor="hours">Введите email для входа</Label>
-                    </FormGroup>
-                    <Button type="submit" onClick={this.props.onLogin}>Войти</Button>
-                </form>
-            </Wrapper>
-        )
-    }
+function Login(props) {
+    return (
+        <Wrapper>
+            <form onSubmit={(e) => {
+                e.preventDefault()
+            }}>
+                <FormGroup>
+                    <Input type="text" onChange={props.onChangeEmail} value={props.user_email}
+                           required="required"/>
+                    <Highlight/>
+                    <Bar/>
+                    <Label htmlFor="hours">Введите email для входа</Label>
+                </FormGroup>
+                <Button type="submit" onClick={props.onLogin}>Войти</Button>
+            </form>
+        </Wrapper>
+    )
 }
 
 function mapStateToProps(state) {
@@ -157,11 +147,10 @@ function mapStateToProps(state) {
     }
 }
 
-
 function mapDispatchToProps(dispatch) {
     return {
         onLogin: () => dispatch({type: 'LOGIN'}),
-        onChangeEmail : (e) => dispatch({type:'CHANGE_EMAIL', payload: e.target.value})
+        onChangeEmail: (e) => dispatch({type: 'CHANGE_EMAIL', payload: e.target.value})
     }
 }
 

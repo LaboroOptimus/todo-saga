@@ -8,34 +8,31 @@ import Login from "./Login/Login";
 import Menu from "./Menu/Menu";
 
 
-function isLogin(){
+function isLogin() {
     return !(localStorage.user === '' || !localStorage.user);
 }
-
-
 
 const App = (props) => {
     return (
         <div className="App">
-            {isLogin() ?  (
-                <React.Fragment>
-                    <Menu/>
-                    <TodoInput/>
-                    <Filters/>
-                    <TodoField/>
-                </React.Fragment>
-            ):
+            {isLogin() ? (
+                    <React.Fragment>
+                        <Menu/>
+                        <TodoInput/>
+                        <Filters/>
+                        <TodoField/>
+                    </React.Fragment>
+                ) :
                 (<Login/>)
             }
         </div>
     );
-}
+};
 
 
 function mapStateToProps(state) {
     return {
         isLogin: state.root.isLogin,
-        /*user_email: state.root.user_email*/
     }
 }
 

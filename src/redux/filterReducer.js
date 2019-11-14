@@ -1,10 +1,10 @@
 const initialState = {
     currentFilter: '',
-}
+};
 
 
 export default function filterReducer(state = initialState, action) {
-    console.log(state)
+    console.log(state);
     switch (action.type) {
         case 'CHANGE_FILTER' :
             switch (action.payload) {
@@ -19,7 +19,7 @@ export default function filterReducer(state = initialState, action) {
                 case 'pause':
                     return {
                         currentFilter: action.payload
-                    }
+                    };
                 default :
                     return {
                         currentFilter: 'all'
