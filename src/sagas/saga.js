@@ -27,7 +27,6 @@ export function* workerLoadData() {
             }
         );
         yield put({type: 'ADD_DATA', payload: data});
-        console.log(data)
     } catch (error) {
         yield put(fetchError);
     }

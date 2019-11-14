@@ -29,14 +29,12 @@ export default function rootReducer(state = initialState, action) {
                 isLogin: false
             };
         case 'ADD_DATA':
-            //onsole.log('пришло: ', action.payload.user_email);
             let fetch_data = [];
 
             for (let key in action.payload) {
                 fetch_data.push(action.payload[key]);
             }
 
-            // console.log(fetch_data);
             return {
                 ...state,
                 task: fetch_data
@@ -79,7 +77,6 @@ export default function rootReducer(state = initialState, action) {
                         id: id,
                         user_email: state.user_email,
                     };
-                    // const user = localStorage.getItem('user');
 
                     axios.post(`https://todo-saga-987da.firebaseio.com/todo/${user}.json`, data)
                         .then(response => {
@@ -112,16 +109,11 @@ export default function rootReducer(state = initialState, action) {
                     return state
             }
         case 'REMOVE_ITEM':
-
-
-            /*axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');*/
             firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
                 snapshot.forEach(function (child) {
                     child.ref.remove();
-                    console.log("Removed!");
                 })
             });
-
 
             return {
                 task: [
@@ -138,13 +130,11 @@ export default function rootReducer(state = initialState, action) {
                 }
             }
 
-
             firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
                 snapshot.forEach(function (child) {
                     child.ref.update({
                         complete: true
                     });
-                    console.log("Set Complete");
                 })
             });
 
@@ -172,17 +162,9 @@ export default function rootReducer(state = initialState, action) {
                     child.ref.update({
                         pause: pause
                     });
-                    console.log("Set Pause");
                 })
             });
 
-
-            /* axios.delete('https://todo-saga-987da.firebaseio.com/todo.json');
-            axios.post('https://todo-saga-987da.firebaseio.com/todo.json', pauseTasks)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => console.log(error)) */
             return {
                 task: pauseTasks,
                 errorsTypes: []
