@@ -36,7 +36,7 @@ const TodoItem = styled.div`
     @keyframes background {
      50% {
        background: #39256F;
-       box-shadow: 0 -200px 100px -100px #39256F inset;
+       box-shadow: 0 -200px 100px -100px #05033e inset;
     }
   `}
 }
@@ -47,6 +47,7 @@ const Title = styled.p`
     margin:0;
     padding: 0;
     flex-grow: 1;
+    font-size: 18px;
 `;
 
 const Time = styled.p`
@@ -54,14 +55,16 @@ const Time = styled.p`
     margin: 0;
     padding: 0;
     margin-right: 10px;
+    margin-top: 3px;
+    font-size: 13px;
 `;
 
 const Close = styled(FontAwesomeIcon)`
     color: #fff;
     margin-left: 5px;
-    
+    margin-top: 3px;
     :hover {
-        color: #C65C53;
+        color: #02122c;
         cursor: pointer;
     }
 `;
@@ -69,9 +72,10 @@ const Close = styled(FontAwesomeIcon)`
 const Done = styled(FontAwesomeIcon)`
     color: #fff;
     margin-right: 5px;
+    margin-top: 5px;
     
     :hover {
-        color: #2B8247;
+        color: #02122c;
         cursor: pointer;
     }
 `;
@@ -79,14 +83,17 @@ const Done = styled(FontAwesomeIcon)`
 const Pause = styled(FontAwesomeIcon)`
     color: #fff;
     margin-right: 5px;
+    margin-top: 5px;
     :hover {
-        color: #C4BD4F;
+        color: #02122c;
         cursor: pointer;
     }
 `;
 
 const CreationTime = styled.span`
     margin-right: 10px;
+    font-size: 13px;
+    margin-top: 3px;
 `;
 
 const Error = styled.p`
@@ -98,9 +105,7 @@ const ErrorIcon = styled(FontAwesomeIcon)`
     margin-right: 5px;
 `;
 
-
 class TodoField extends React.Component {
-
     componentDidMount() {
         this.props.loadData();
     }
@@ -116,18 +121,19 @@ class TodoField extends React.Component {
                     )
                 })}
                 <Wrapper>
-
                     <Todo>
+                        {this.props.task.length === 0 ? <p>Пока задач нет</p> : <h3>Список задач</h3>}
                         {this.props.task.map((e, index) => {
                             return (
                                 <TodoItem active={!e.complete && !e.pause}
                                           background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
-                                    <Done icon={faCheck} size="lg" onClick={() => this.props.completeItem(index,e.id)}/>
+                                    <Done icon={faCheck} size="md"
+                                          onClick={() => this.props.completeItem(index, e.id)}/>
                                     <Title>{e.text}</Title>
-                                    <CreationTime>{e.time}</CreationTime>
-                                    <Time>{e.hours}:{e.minutes}</Time>
-                                    <Pause icon={e.pause ? faPlay : faPauseCircle} size="lg"
-                                           onClick={() => this.props.pauseItem(index,e.id)}/>
+                                    <CreationTime>Создано: {e.time}</CreationTime>
+                                    <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
+                                    <Pause icon={e.pause ? faPlay : faPauseCircle} size="md"
+                                           onClick={() => this.props.pauseItem(index, e.id)}/>
                                     <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index, e.id)}/>
                                 </TodoItem>
                             )
@@ -150,9 +156,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    removeItem: (index,id) => dispatch({type: 'REMOVE_ITEM', payload: {index, id}}),
-    completeItem: (index,id) => dispatch({type: 'COMPLETE_ITEM', payload: {index,id}}),
-    pauseItem: (index,id) => dispatch({type: 'PAUSE_ITEM', payload: {index,id}}),
+    removeItem: (index, id) => dispatch({type: 'REMOVE_ITEM', payload: {index, id}}),
+    completeItem: (index, id) => dispatch({type: 'COMPLETE_ITEM', payload: {index, id}}),
+    pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
     loadData: () => dispatch({type: 'LOAD'}),
 })
 

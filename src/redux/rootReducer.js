@@ -21,13 +21,15 @@ else {
     user = localStorage.getItem('user').replace(/\./gi, '');
 };
 
-console.log('юзер', user)
-/*let user = localStorage.getItem('user');
-user = user.replace(/\./gi, '');*/
-//console.log('путь: ', user);
-
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case 'EXIT':
+            localStorage.setItem('user', '');
+            return {
+                ...state,
+                user_email: '',
+                isLogin: false
+            }
         case 'ADD_DATA':
             //onsole.log('пришло: ', action.payload.user_email);
             let fetch_data = [];

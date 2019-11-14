@@ -157,7 +157,7 @@ class TodoInput extends React.Component {
                         <Label htmlFor="minutes">Кол-во минут</Label>
                     </FormGroup>
                     <Button onClick={this.props.handleValidate}>Добавить</Button>
-                    <Button onClick={this.props.fetchTodo}>Вызвать сагу</Button>
+                    <Button onClick={this.props.fetchTodo}>Мне повезет!</Button>
                 </form>
             </Wrapper>
         )
