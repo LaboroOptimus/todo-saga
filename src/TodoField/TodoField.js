@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {connect} from 'react-redux'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck, faExclamationCircle, faPauseCircle, faPlay, faTimes} from '@fortawesome/free-solid-svg-icons'
+import StatusCircles from '../StatusCircles/StatusCircles'
 
 const Wrapper = styled.div`
     display: flex;
@@ -11,8 +12,10 @@ const Wrapper = styled.div`
 
 const Todo = styled.div`
     display: flex;
-    flex-direction: column;
-    width: 60%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 75%;
     margin-top: 20px;
     border: 2px solid #eee;
     border-radius: 5px;
@@ -28,6 +31,8 @@ const TodoItem = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 10px; 
+    margin-left: 10px;
+    width: 31%;
     
     ${({active}) => active && `
     box-shadow: 0 -200px 100px -120px #625EC9 inset;
@@ -47,7 +52,17 @@ const Title = styled.p`
     margin:0;
     padding: 0;
     flex-grow: 1;
-    font-size: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 10px;
+`;
+
+const Description = styled.p`
+    color: #fff;
+    margin:0;
+    padding: 0;
+    font-size: 16px;
+ 
 `;
 
 const Time = styled.p`
@@ -61,8 +76,9 @@ const Time = styled.p`
 
 const Close = styled(FontAwesomeIcon)`
     color: #fff;
-    margin-left: 5px;
-    margin-top: 3px;
+    margin-left: 8px;
+
+    margin-top: 6px;
     :hover {
         color: #02122c;
         cursor: pointer;
@@ -71,9 +87,10 @@ const Close = styled(FontAwesomeIcon)`
 
 const Done = styled(FontAwesomeIcon)`
     color: #fff;
-    margin-right: 5px;
-    margin-top: 5px;
-    
+   
+    margin-top: 8px;
+    margin-left: 8px;
+   
     :hover {
         color: #02122c;
         cursor: pointer;
@@ -82,13 +99,26 @@ const Done = styled(FontAwesomeIcon)`
 
 const Pause = styled(FontAwesomeIcon)`
     color: #fff;
-    margin-right: 5px;
-    margin-top: 5px;
+    margin-left: 8px;
+    
+    margin-top: 8px;
     :hover {
         color: #02122c;
         cursor: pointer;
     }
 `;
+
+const Row = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 10px;
+`;
+
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
+`
 
 const CreationTime = styled.span`
     margin-right: 10px;
@@ -105,6 +135,7 @@ const ErrorIcon = styled(FontAwesomeIcon)`
     margin-right: 5px;
 `;
 
+
 class TodoField extends React.Component {
     componentDidMount() {
         this.props.loadData();
@@ -120,21 +151,44 @@ class TodoField extends React.Component {
                         </Error>
                     )
                 })}
+                {this.props.task.length === 0 ? <p>Пока задач нет</p> : <h3>Список задач</h3>}
                 <Wrapper>
                     <Todo>
-                        {this.props.task.length === 0 ? <p>Пока задач нет</p> : <h3>Список задач</h3>}
                         {this.props.task.map((e, index) => {
                             return (
                                 <TodoItem active={!e.complete && !e.pause}
                                           background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
-                                    <Done icon={faCheck}
-                                          onClick={() => this.props.completeItem(index, e.id)}/>
-                                    <Title>{e.text}</Title>
-                                    <CreationTime>Создано: {e.time}</CreationTime>
-                                    <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
-                                    <Pause icon={e.pause ? faPlay : faPauseCircle}
-                                           onClick={() => this.props.pauseItem(index, e.id)}/>
-                                    <Close icon={faTimes} size="lg" onClick={() => this.props.removeItem(index, e.id)}/>
+                                    <Column>
+                                        <Row>
+                                            <Done icon={faCheck} onClick={() => this.props.completeItem(index, e.id)}/>
+
+                                            
+
+
+                                            <Pause icon={e.pause ? faPlay : faPauseCircle}
+                                                   onClick={() => this.props.pauseItem(index, e.id)}/>
+
+
+
+
+                                            <Close size="lg" icon={faTimes}
+                                                   onClick={() => this.props.removeItem(index, e.id)}/>
+                                            <Title>{e.text}</Title>
+                                        </Row>
+                                        <Row>
+                                            <Description>{e.description}</Description>
+                                        </Row>
+
+                                        <Row>
+                                            <StatusCircles numm={e.timeToEnd}/>
+                                        </Row>
+
+                                        <Row>
+                                            <CreationTime>Создано: {e.time}</CreationTime>
+                                            <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
+                                            <p>Таймер: {e.timer}</p>
+                                        </Row>
+                                    </Column>
                                 </TodoItem>
                             )
                         })}
@@ -151,7 +205,7 @@ function mapStateToProps(state) {
         validate: state.root.validate,
         error: state.root.error,
         errorsTypes: state.root.errorsTypes,
-        currentFilter: state.filter.currentFilter
+        currentFilter: state.filter.currentFilter,
     }
 }
 

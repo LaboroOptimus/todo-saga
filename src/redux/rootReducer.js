@@ -3,6 +3,7 @@ import firebase from '../firebase.js'
 
 const initialState = {
     text: '',
+    description:'',
     hours: '',
     minutes: '',
     task: [],
@@ -55,6 +56,26 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 minutes: action.payload
             };
+        case 'CHANGE_DESC':
+            return {
+                ...state,
+                description: action.payload
+            };
+        case 'SET_TIMER':
+
+
+            let newTimerTask = [...state.task];
+            for (let i = 0; i < newTimerTask.length; i++) {
+                if (newTimerTask[i].id === action.payload.id) {
+                        newTimerTask[i].timer = newTimerTask[i].timer + 1;
+
+                }
+            }
+
+            return {
+                task: newTimerTask,
+                errorsTypes: []
+            };
         case 'ADD':
             switch (state.error) {
                 case false :
@@ -67,10 +88,14 @@ export default function rootReducer(state = initialState, action) {
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
                     let id = Math.round(rand);
 
+
                     const data = {
                         text: state.text,
                         hours: state.hours,
                         minutes: state.minutes,
+                        description: state.description,
+                        timer: 0,
+                        timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
                         time: hNow + ':' + mNow,
                         complete: false,
                         pause: true,
@@ -89,6 +114,9 @@ export default function rootReducer(state = initialState, action) {
                             text: state.text,
                             hours: state.hours,
                             minutes: state.minutes,
+                            description: state.description,
+                            timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
+                            timer: 0,
                             time: hNow + ':' + mNow,
                             complete: false,
                             pause: true,
@@ -98,6 +126,7 @@ export default function rootReducer(state = initialState, action) {
                         text: '',
                         hours: '',
                         minutes: '',
+                        description: '',
                         validate: false,
                         errorsTypes: []
                     };
@@ -150,6 +179,7 @@ export default function rootReducer(state = initialState, action) {
                     if (pauseTasks[i].pause) {
                         pause = false;
                         pauseTasks[i].pause = pause;
+
                     } else {
                         pause = true;
                         pauseTasks[i].pause = pause;

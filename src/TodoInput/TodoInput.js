@@ -142,6 +142,15 @@ class TodoInput extends React.Component {
                         <Bar/>
                         <Label htmlFor="hours">Введите название задачи</Label>
                     </FormGroup>
+
+                    <FormGroup>
+                        <Input type="text" onChange={this.props.onChangeDesc} value={this.props.description}
+                               required="required"/>
+                        <Highlight/>
+                        <Bar/>
+                        <Label htmlFor="hours">Введите описание задачи</Label>
+                    </FormGroup>
+
                     <FormGroup>
                         <Input type="text" name="hours" onChange={this.props.onChangeHours} value={this.props.hours}
                                required="required"/>
@@ -167,11 +176,13 @@ class TodoInput extends React.Component {
 function mapStateToProps(state) {
     return {
         text: state.root.text,
+        description: state.root.description,
         hours: state.root.hours,
         minutes: state.root.minutes,
         task: state.root.task,
         validate: state.root.validate,
         error: state.root.error,
+
     }
 }
 
@@ -181,6 +192,7 @@ function mapDispatchToProps(dispatch) {
         onChangeText: (e) => dispatch({type: 'CHANGE_TEXT', payload: e.target.value}),
         onChangeHours: (e) => dispatch({type: 'CHANGE_HOURS', payload: e.target.value}),
         onChangeMinutes: (e) => dispatch({type: 'CHANGE_MINUTES', payload: e.target.value}),
+        onChangeDesc: (e)=> dispatch({type:'CHANGE_DESC', payload: e.target.value}),
         fetchTodo: () => dispatch({type: 'FETCH_TODO'}),
         handleValidate: () => dispatch({type: 'VALIDATE'}),
     }

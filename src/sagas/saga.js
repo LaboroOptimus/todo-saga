@@ -1,5 +1,13 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects'
 
+const delay = (ms) => new Promise(res => setTimeout(res, ms))
+
+const wait = ms => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(), ms)
+    })
+}
+
 export function* fetchError() {
     yield put({type: 'FETCH_ERROR'})
 }
@@ -15,8 +23,29 @@ export function* workerValidate() {
 
 export function* watchLoad() {
     yield takeEvery('LOAD', workerLoadData)
-
 }
+
+/* START TIMER */
+export function* watchTimer() {
+    yield takeEvery('PAUSE_ITEM', workerSetTimer)
+}
+
+export function* workerSetTimer(data) {
+
+    while(true) {
+        yield put({type: 'SET_TIMER', payload: data.payload});
+        yield delay(1000);
+    }
+}
+/* START TIMER */
+
+/* END TIMER */
+/*export function* watchEndTimer() {
+    yield takeEvery('PAUSE_ITEM', workerEndTimer)
+}*/
+
+
+/* END TIMER */
 
 export function* workerLoadData() {
     try {
@@ -64,6 +93,7 @@ export default function* rootSaga() {
         watchFetchAsync(),
         watchValidate(),
         watchFilters(),
-        watchLoad()
+        watchLoad(),
+        watchTimer()
     ])
 }
