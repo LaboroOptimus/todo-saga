@@ -36,10 +36,13 @@ export default function rootReducer(state = initialState, action) {
                 fetch_data.push(action.payload[key]);
             }
 
+            for(let i = 0; i < fetch_data.length; i++){
+                fetch_data[i].pause = true;
+            }
+
             return {
                 ...state,
                 task: fetch_data
-
             };
         case 'CHANGE_TEXT':
             return {
@@ -61,21 +64,42 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 description: action.payload
             };
+        case 'CHECK_TIMER':
+            let checkTimerTask = [...state.task];
+            let checkElem = checkTimerTask.findIndex(checkTimerTask => checkTimerTask.id === +action.payload);
+            console.log(checkElem);
+
+           /* if(checkTimerTask[checkElem].timerMin === 25){
+                checkTimerTask[checkElem].timeToEnd -=1;
+            } */
+            return {
+                ...state,
+                task: checkTimerTask,
+                errorsTypes: []
+            };
+
+
         case 'SET_TIMER':
+        let newTimerTask = [...state.task];
+        let elem = newTimerTask.findIndex(newTimerTask => newTimerTask.id === +action.payload);
+        newTimerTask[elem].timerSec += 1;
 
+        if(newTimerTask[elem].timerSec === 60){
+            newTimerTask[elem].timerMin +=1;
+            newTimerTask[elem].timerSec = 0;
+        }
 
-            let newTimerTask = [...state.task];
-            for (let i = 0; i < newTimerTask.length; i++) {
-                if (newTimerTask[i].id === action.payload.id) {
-                        newTimerTask[i].timer = newTimerTask[i].timer + 1;
-
-                }
-            }
+        if(newTimerTask[elem].timerMin === 60){
+                newTimerTask[elem].timerHour +=1;
+                newTimerTask[elem].timerMin = 0;
+        }
 
             return {
+                ...state,
                 task: newTimerTask,
                 errorsTypes: []
             };
+
         case 'ADD':
             switch (state.error) {
                 case false :
@@ -94,7 +118,9 @@ export default function rootReducer(state = initialState, action) {
                         hours: state.hours,
                         minutes: state.minutes,
                         description: state.description,
-                        timer: 0,
+                        timerSec: 0,
+                        timerMin: 0,
+                        timerHour: 0,
                         timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
                         time: hNow + ':' + mNow,
                         complete: false,
@@ -116,7 +142,9 @@ export default function rootReducer(state = initialState, action) {
                             minutes: state.minutes,
                             description: state.description,
                             timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
-                            timer: 0,
+                            timerSec: 0,
+                            timerMin: 0,
+                            timerHour: 0,
                             time: hNow + ':' + mNow,
                             complete: false,
                             pause: true,
@@ -197,6 +225,36 @@ export default function rootReducer(state = initialState, action) {
 
             return {
                 task: pauseTasks,
+                errorsTypes: []
+            };
+
+        case 'PLAY_ITEM':
+            let playTasks = [...state.task];
+            let play = false;
+            localStorage.setItem('play', action.payload.id);
+            for (let i = 0; i < playTasks.length; i++) {
+                if (playTasks[i].id === action.payload.id && !playTasks[i].complete) {
+                    if (playTasks[i].pause) {
+                        play  = false;
+                        playTasks[i].pause = play ;
+
+                    } else {
+                        play  = true;
+                        playTasks[i].pause = play;
+                    }
+
+                }
+            }
+            firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
+                snapshot.forEach(function (child) {
+                    child.ref.update({
+                        pause: play
+                    });
+                })
+            });
+
+            return {
+                task: playTasks,
                 errorsTypes: []
             };
         case 'FETCH_SUCCESS':
@@ -314,8 +372,6 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 user_email: action.payload
             };
-
-
         default:
             return state
     }

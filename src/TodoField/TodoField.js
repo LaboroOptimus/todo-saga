@@ -118,7 +118,7 @@ const Row = styled.div`
 const Column = styled.div`
     display: flex;
     flex-direction: column;
-`
+`;
 
 const CreationTime = styled.span`
     margin-right: 10px;
@@ -139,6 +139,7 @@ const ErrorIcon = styled(FontAwesomeIcon)`
 class TodoField extends React.Component {
     componentDidMount() {
         this.props.loadData();
+        this.props.watchTimer();
     }
 
     render() {
@@ -161,16 +162,12 @@ class TodoField extends React.Component {
                                     <Column>
                                         <Row>
                                             <Done icon={faCheck} onClick={() => this.props.completeItem(index, e.id)}/>
-
-                                            
-
-
-                                            <Pause icon={e.pause ? faPlay : faPauseCircle}
-                                                   onClick={() => this.props.pauseItem(index, e.id)}/>
-
-
-
-
+                                            {e.pause ?
+                                                (<Pause icon={faPlay}
+                                                        onClick={() => this.props.playItem(index, e.id)}/>) :
+                                                (<Pause icon={faPauseCircle}
+                                                        onClick={() => this.props.pauseItem(index, e.id)}/>)
+                                            }
                                             <Close size="lg" icon={faTimes}
                                                    onClick={() => this.props.removeItem(index, e.id)}/>
                                             <Title>{e.text}</Title>
@@ -186,7 +183,7 @@ class TodoField extends React.Component {
                                         <Row>
                                             <CreationTime>Создано: {e.time}</CreationTime>
                                             <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
-                                            <p>Таймер: {e.timer}</p>
+                                            <Time>Прошло: <br/>{e.timerHour}:{e.timerMin}:{e.timerSec}</Time>
                                         </Row>
                                     </Column>
                                 </TodoItem>
@@ -213,7 +210,9 @@ const mapDispatchToProps = dispatch => ({
     removeItem: (index, id) => dispatch({type: 'REMOVE_ITEM', payload: {index, id}}),
     completeItem: (index, id) => dispatch({type: 'COMPLETE_ITEM', payload: {index, id}}),
     pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
+    playItem: (index, id) => dispatch({type: 'PLAY_ITEM', payload: {index, id}}),
     loadData: () => dispatch({type: 'LOAD'}),
+    watchTimer: () => dispatch({type: 'CHECK_TIMER'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoField)

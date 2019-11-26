@@ -13,10 +13,10 @@ const Circle = styled.div`
 
 
 function StatusCircles(props) {
-    const numm = props.numm
+    const numm = props.numm;
     return (
         <div>
-            {Array(numm).fill(<Circle/>)}
+            {Array(numm).fill(<Circle />)}
         </div>
     )
 }

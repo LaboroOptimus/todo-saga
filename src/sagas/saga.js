@@ -1,6 +1,6 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects'
+import {all, call, put, takeEvery,cancel,select,take,fork ,getContext,takeLatest} from 'redux-saga/effects'
 
-const delay = (ms) => new Promise(res => setTimeout(res, ms))
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const wait = ms => {
     return new Promise(resolve => {
@@ -25,27 +25,35 @@ export function* watchLoad() {
     yield takeEvery('LOAD', workerLoadData)
 }
 
-/* START TIMER */
-export function* watchTimer() {
-    yield takeEvery('PAUSE_ITEM', workerSetTimer)
+/*TIMER */
+export function* watchSetTimer() {
+    yield takeEvery('SET_TIMER', workerSetTimer)
 }
 
 export function* workerSetTimer(data) {
+    /*console.log('сага:', data.payload);*/
+    yield put({type: 'CHECK_TIMER', payload: data.payload});
+}
 
+
+function* tick() {
+    const playId = localStorage.getItem('play');
     while(true) {
-        yield put({type: 'SET_TIMER', payload: data.payload});
-        yield delay(1000);
+        yield call(delay,1000);
+        yield put({type: 'SET_TIMER', payload:playId});
     }
 }
-/* START TIMER */
 
-/* END TIMER */
-/*export function* watchEndTimer() {
-    yield takeEvery('PAUSE_ITEM', workerEndTimer)
-}*/
+function* timer() {
+    while(yield take('PLAY_ITEM')) {
+        const bgSyncTask = yield fork(tick);
+        yield take('PAUSE_ITEM')
+        yield cancel(bgSyncTask)
+    }
+}
 
+/*TIMER */
 
-/* END TIMER */
 
 export function* workerLoadData() {
     try {
@@ -94,6 +102,7 @@ export default function* rootSaga() {
         watchValidate(),
         watchFilters(),
         watchLoad(),
-        watchTimer()
+        timer(),
+        watchSetTimer(),
     ])
 }
