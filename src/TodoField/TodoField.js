@@ -32,7 +32,7 @@ const TodoItem = styled.div`
     margin-bottom: 10px;
     border-radius: 10px; 
     margin-left: 10px;
-    width: 31%;
+    width: 30%;
     
     ${({active}) => active && `
     box-shadow: 0 -200px 100px -120px #625EC9 inset;
@@ -136,13 +136,20 @@ const ErrorIcon = styled(FontAwesomeIcon)`
 `;
 
 
+
+
 class TodoField extends React.Component {
+    state = {
+        count: 0,
+    };
+
     componentDidMount() {
         this.props.loadData();
         this.props.watchTimer();
-    }
+    };
 
     render() {
+        console.log('перерисовался')
         return (
             <React.Fragment>
                 {this.props.errorsTypes.length > 0 && this.props.errorsTypes.map((e, index) => {

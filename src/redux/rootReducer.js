@@ -1,9 +1,10 @@
 import axios from 'axios'
 import firebase from '../firebase.js'
+import {getPomodoroTime, getPomodoroRest} from "../utils/pomodoro";
 
 const initialState = {
     text: '',
-    description:'',
+    description: '',
     hours: '',
     minutes: '',
     task: [],
@@ -13,6 +14,16 @@ const initialState = {
     isLogin: false,
     user_email: ''
 };
+
+
+/*const actions = [
+    {
+        eventId:
+        taskId:
+        status:
+        time:
+    }
+]*/
 
 let user = '';
 if (localStorage.getItem('user') === null) {
@@ -36,7 +47,7 @@ export default function rootReducer(state = initialState, action) {
                 fetch_data.push(action.payload[key]);
             }
 
-            for(let i = 0; i < fetch_data.length; i++){
+            for (let i = 0; i < fetch_data.length; i++) {
                 fetch_data[i].pause = true;
             }
 
@@ -64,41 +75,41 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 description: action.payload
             };
-        case 'CHECK_TIMER':
-            let checkTimerTask = [...state.task];
-            let checkElem = checkTimerTask.findIndex(checkTimerTask => checkTimerTask.id === +action.payload);
-            console.log(checkElem);
+        /*   case 'CHECK_TIMER':
+               let checkTimerTask = [...state.task];
+               let checkElem = checkTimerTask.findIndex(checkTimerTask => checkTimerTask.id === +action.payload);
+               console.log(checkElem);
 
-           /* if(checkTimerTask[checkElem].timerMin === 25){
-                checkTimerTask[checkElem].timeToEnd -=1;
-            } */
-            return {
-                ...state,
-                task: checkTimerTask,
-                errorsTypes: []
-            };
+               /!* if(checkTimerTask[checkElem].timerMin === 25){
+                    checkTimerTask[checkElem].timeToEnd -=1;
+                } *!/
+               return {
+                   ...state,
+                   task: checkTimerTask,
+                   errorsTypes: []
+               };
+   */
 
+        /* case 'SET_TIMER':
+             let newTimerTask = [...state.task];
+             let elem = newTimerTask.findIndex(newTimerTask => newTimerTask.id === +action.payload);
+             newTimerTask[elem].timerSec += 1;
 
-        case 'SET_TIMER':
-        let newTimerTask = [...state.task];
-        let elem = newTimerTask.findIndex(newTimerTask => newTimerTask.id === +action.payload);
-        newTimerTask[elem].timerSec += 1;
+             if (newTimerTask[elem].timerSec === 60) {
+                 newTimerTask[elem].timerMin += 1;
+                 newTimerTask[elem].timerSec = 0;
+             }
 
-        if(newTimerTask[elem].timerSec === 60){
-            newTimerTask[elem].timerMin +=1;
-            newTimerTask[elem].timerSec = 0;
-        }
+             if (newTimerTask[elem].timerMin === 60) {
+                 newTimerTask[elem].timerHour += 1;
+                 newTimerTask[elem].timerMin = 0;
+             }
 
-        if(newTimerTask[elem].timerMin === 60){
-                newTimerTask[elem].timerHour +=1;
-                newTimerTask[elem].timerMin = 0;
-        }
-
-            return {
-                ...state,
-                task: newTimerTask,
-                errorsTypes: []
-            };
+             return {
+                 ...state,
+                 task: newTimerTask,
+                 errorsTypes: []
+             };*/
 
         case 'ADD':
             switch (state.error) {
@@ -109,26 +120,37 @@ export default function rootReducer(state = initialState, action) {
                     if (+mNow < 10) {
                         mNow = '0' + mNow;
                     }
+
+                    const startTime = (time.getHours() * 60) + time.getMinutes();
+                    const endTime = startTime + (+state.hours * 60 + +state.minutes);
+
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
                     let id = Math.round(rand);
-
 
                     const data = {
                         text: state.text,
                         hours: state.hours,
                         minutes: state.minutes,
                         description: state.description,
+                        pomodoroEndRest: getPomodoroTime(startTime, endTime),
+                        pomodoroStartRest: getPomodoroRest(getPomodoroTime(startTime, endTime)),
                         timerSec: 0,
                         timerMin: 0,
                         timerHour: 0,
-                        timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
+                        timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
                         time: hNow + ':' + mNow,
                         complete: false,
                         pause: true,
                         id: id,
                         user_email: state.user_email,
+                        actions: [{
+                            eventId: 0,
+                            status: 'add',
+                            time: (hNow * 60) + (mNow),
+                        }]
                     };
 
+                    console.log(data.pomodoroEndRest);
                     axios.post(`https://todo-saga-987da.firebaseio.com/todo/${user}.json`, data)
                         .then(response => {
                             console.log(response)
@@ -141,7 +163,9 @@ export default function rootReducer(state = initialState, action) {
                             hours: state.hours,
                             minutes: state.minutes,
                             description: state.description,
-                            timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes)/30),
+                            timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
+                            pomodoroEndRest: getPomodoroTime(startTime, endTime),
+                            pomodoroStartRest: getPomodoroRest(getPomodoroTime(startTime, endTime)),
                             timerSec: 0,
                             timerMin: 0,
                             timerHour: 0,
@@ -149,7 +173,12 @@ export default function rootReducer(state = initialState, action) {
                             complete: false,
                             pause: true,
                             id: id,
-                            user_email: state.user_email
+                            user_email: state.user_email,
+                            actions: [{
+                                eventId: 0,
+                                status: 'add',
+                                time: (+state.hours * 60) + (+state.minutes),
+                            }]
                         }],
                         text: '',
                         hours: '',
@@ -181,16 +210,24 @@ export default function rootReducer(state = initialState, action) {
             };
         case 'COMPLETE_ITEM':
             let newTask = [...state.task];
+            const completeTime = new Date();
             for (let i = 0; i < newTask.length; i++) {
                 if (newTask[i].id === action.payload.id) {
-                    newTask[i].complete = true
+                    var newActions = [...newTask[i].actions, {
+                        eventId: 0,
+                        status: 'complete',
+                        time: completeTime.getHours() * 60 + completeTime.getMinutes(),
+                    }];
+                    newTask[i].complete = true;
+                    newTask[i].actions = newActions;
                 }
             }
 
             firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
                 snapshot.forEach(function (child) {
                     child.ref.update({
-                        complete: true
+                        complete: true,
+                        actions: [...newActions]
                     });
                 })
             });
@@ -201,24 +238,27 @@ export default function rootReducer(state = initialState, action) {
             };
         case 'PAUSE_ITEM':
             let pauseTasks = [...state.task];
-            let pause = false;
+            const pauseTime = new Date();
+            var pauseAction = {};
+
             for (let i = 0; i < pauseTasks.length; i++) {
                 if (pauseTasks[i].id === action.payload.id && !pauseTasks[i].complete) {
-                    if (pauseTasks[i].pause) {
-                        pause = false;
-                        pauseTasks[i].pause = pause;
-
-                    } else {
-                        pause = true;
-                        pauseTasks[i].pause = pause;
+                    var pauseActions = [...pauseTasks[i].actions];
+                    pauseTasks[i].pause = true;
+                    pauseAction = {
+                        eventId: 2,
+                        status: 'pause',
+                        time: pauseTime.getHours() * 60 + pauseTime.getMinutes(),
                     }
-
                 }
             }
+
+            pauseActions.push(pauseAction);
             firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
                 snapshot.forEach(function (child) {
                     child.ref.update({
-                        pause: pause
+                        pause: true,
+                        actions: [...pauseActions]
                     });
                 })
             });
@@ -230,25 +270,32 @@ export default function rootReducer(state = initialState, action) {
 
         case 'PLAY_ITEM':
             let playTasks = [...state.task];
-            let play = false;
+            // let play = false;
             localStorage.setItem('play', action.payload.id);
+            const playTime = new Date();
+            var playAction = {};
+
             for (let i = 0; i < playTasks.length; i++) {
                 if (playTasks[i].id === action.payload.id && !playTasks[i].complete) {
-                    if (playTasks[i].pause) {
-                        play  = false;
-                        playTasks[i].pause = play ;
-
-                    } else {
-                        play  = true;
-                        playTasks[i].pause = play;
+                    var playActions = [...playTasks[i].actions];
+                    playTasks[i].pause = false;
+                    playAction = {
+                        eventId: 1,
+                        status: 'play',
+                        time: playTime.getHours() * 60 + playTime.getMinutes(),
                     }
+
 
                 }
             }
+
+            playActions.push(playAction);
+
             firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(action.payload.id).once('value').then(function (snapshot) {
                 snapshot.forEach(function (child) {
                     child.ref.update({
-                        pause: play
+                        pause: false,
+                        actions: playActions
                     });
                 })
             });

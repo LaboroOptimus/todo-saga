@@ -26,12 +26,12 @@ export function* watchLoad() {
 }
 
 /*TIMER */
-export function* watchSetTimer() {
+/*export function* watchSetTimer() {
     yield takeEvery('SET_TIMER', workerSetTimer)
 }
 
 export function* workerSetTimer(data) {
-    /*console.log('сага:', data.payload);*/
+    /!*console.log('сага:', data.payload);*!/
     yield put({type: 'CHECK_TIMER', payload: data.payload});
 }
 
@@ -50,7 +50,7 @@ function* timer() {
         yield take('PAUSE_ITEM')
         yield cancel(bgSyncTask)
     }
-}
+}*/
 
 /*TIMER */
 
@@ -102,7 +102,7 @@ export default function* rootSaga() {
         watchValidate(),
         watchFilters(),
         watchLoad(),
-        timer(),
-        watchSetTimer(),
+       /* timer(),
+        watchSetTimer(),*/
     ])
 }
