@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import {connect} from 'react-redux'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck, faExclamationCircle, faPauseCircle, faPlay, faTimes} from '@fortawesome/free-solid-svg-icons'
 import StatusCircles from '../StatusCircles/StatusCircles'
+import Timer from "../Timer/Timer";
+import {playPomodoroTimer} from "../utils/pomodoro";
 
 const Wrapper = styled.div`
     display: flex;
@@ -138,45 +140,50 @@ const ErrorIcon = styled(FontAwesomeIcon)`
 
 
 
-class TodoField extends React.Component {
-    state = {
+function TodoField(props) {
+    /*state = {
         count: 0,
-    };
+    };*/
 
-    componentDidMount() {
+    useEffect(() => {
+        props.loadData();
+        props.watchTimer();
+    }, [])
+
+    /*componentDidMount() {
         this.props.loadData();
         this.props.watchTimer();
-    };
+    };*/
 
-    render() {
-        console.log('перерисовался')
+   /* render() {*/
         return (
             <React.Fragment>
-                {this.props.errorsTypes.length > 0 && this.props.errorsTypes.map((e, index) => {
+
+                {props.errorsTypes.length > 0 && props.errorsTypes.map((e, index) => {
                     return (
                         <Error key={index}>
                             <ErrorIcon icon={faExclamationCircle}/>Ошибка #{index + 1} - {e}
                         </Error>
                     )
                 })}
-                {this.props.task.length === 0 ? <p>Пока задач нет</p> : <h3>Список задач</h3>}
+                {props.task.length === 0 ? <p>Пока задач нет</p> : <h3>Список задач</h3>}
                 <Wrapper>
                     <Todo>
-                        {this.props.task.map((e, index) => {
+                        {props.task.map((e, index) => {
                             return (
                                 <TodoItem active={!e.complete && !e.pause}
                                           background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
                                     <Column>
                                         <Row>
-                                            <Done icon={faCheck} onClick={() => this.props.completeItem(index, e.id)}/>
+                                            <Done icon={faCheck} onClick={() => props.completeItem(index, e.id)}/>
                                             {e.pause ?
                                                 (<Pause icon={faPlay}
-                                                        onClick={() => this.props.playItem(index, e.id)}/>) :
+                                                        onClick={() => props.playItem(index, e.id)}/>) :
                                                 (<Pause icon={faPauseCircle}
-                                                        onClick={() => this.props.pauseItem(index, e.id)}/>)
+                                                        onClick={() => props.pauseItem(index, e.id)}/>)
                                             }
                                             <Close size="lg" icon={faTimes}
-                                                   onClick={() => this.props.removeItem(index, e.id)}/>
+                                                   onClick={() => props.removeItem(index, e.id)}/>
                                             <Title>{e.text}</Title>
                                         </Row>
                                         <Row>
@@ -188,6 +195,7 @@ class TodoField extends React.Component {
                                         </Row>
 
                                         <Row>
+                                            <Timer id={e.id}/>
                                             <CreationTime>Создано: {e.time}</CreationTime>
                                             <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
                                             <Time>Прошло: <br/>{e.timerHour}:{e.timerMin}:{e.timerSec}</Time>
@@ -200,7 +208,6 @@ class TodoField extends React.Component {
                 </Wrapper>
             </React.Fragment>
         )
-    }
 }
 
 function mapStateToProps(state) {
@@ -217,7 +224,7 @@ const mapDispatchToProps = dispatch => ({
     removeItem: (index, id) => dispatch({type: 'REMOVE_ITEM', payload: {index, id}}),
     completeItem: (index, id) => dispatch({type: 'COMPLETE_ITEM', payload: {index, id}}),
     pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
-    playItem: (index, id) => dispatch({type: 'PLAY_ITEM', payload: {index, id}}),
+    playItem: (index, id) => dispatch(playPomodoroTimer(index,id)),
     loadData: () => dispatch({type: 'LOAD'}),
     watchTimer: () => dispatch({type: 'CHECK_TIMER'}),
 });

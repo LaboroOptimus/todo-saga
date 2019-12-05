@@ -20,12 +20,23 @@ export const getPomodoroTime = (start, end) => {
     return arr;
 };
 
+
 export const getPomodoroRest = (array) => {
     let arr = [];
-    for(let i = 0; i< array.length; i++){
+    for (let i = 0; i < array.length; i++) {
         arr[i] = array[i] - 5;
     }
     console.log('arr2', arr);
     return arr;
-}
+};
+
+export const playPomodoroTimer = (index,id) => {
+
+    return {
+        type: 'PLAY_ITEM',
+        payload: {index, id}
+    }
+};
+
+
 

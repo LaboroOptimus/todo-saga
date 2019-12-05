@@ -270,8 +270,11 @@ export default function rootReducer(state = initialState, action) {
 
         case 'PLAY_ITEM':
             let playTasks = [...state.task];
-            // let play = false;
             localStorage.setItem('play', action.payload.id);
+
+
+
+
             const playTime = new Date();
             var playAction = {};
 
