@@ -2,7 +2,7 @@ import axios from 'axios'
 import firebase from '../firebase.js'
 import {getPomodoroTime, getPomodoroRest} from "../utils/pomodoro";
 
-const initialState = {
+export const initialState = {
     text: '',
     description: '',
     hours: '',
@@ -270,7 +270,7 @@ export default function rootReducer(state = initialState, action) {
 
         case 'PLAY_ITEM':
             let playTasks = [...state.task];
-            localStorage.setItem('play', action.payload.id);
+           // localStorage.setItem('play', action.payload.id);
 
 
 

@@ -32,6 +32,7 @@ export const getPomodoroRest = (array) => {
 
 export const playPomodoroTimer = (index,id) => {
 
+    localStorage.setItem('play', id);
     return {
         type: 'PLAY_ITEM',
         payload: {index, id}
