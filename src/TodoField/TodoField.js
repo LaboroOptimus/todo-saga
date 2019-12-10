@@ -163,16 +163,17 @@ function TodoField(props) {
                                       background={e.complete ? '#b6bac1' : '#7598D1'} key={index}>
                                 <Column>
                                     <Row>
-                                        <Done icon={faCheck} onClick={() => props.completeItem(index, e.id)}/>
-                                        {e.pause ?
-
+                                        {!e.complete ? <Done icon={faCheck} onClick={() => props.completeItem(index, e.id)}/> : null}
+                                        {!e.complete ?
+                                            (e.pause ?
+                                                    (<Timer type={'play'} itemId={e.id} index={index}/>) :
+                                                    (<Timer type={'pause'} itemId={e.id} index={index}/>)
+                                             )
+                                            : null}
+                                       {/* {e.pause ?
                                             (<Timer type={'play'} itemId={e.id} index={index}/>) :
                                             (<Timer type={'pause'} itemId={e.id} index={index}/>)
-                                            /*(<Pause icon={faPlay}
-                                                    onClick={() => props.playItem(index, e.id)}/>) :
-                                            (<Pause icon={faPauseCircle}
-                                                    onClick={() => props.pauseItem(index, e.id)}/>)*/
-                                        }
+                                        }*/}
                                         <Close size="lg" icon={faTimes}
                                                onClick={() => props.removeItem(index, e.id)}/>
                                         <Title>{e.text}</Title>
