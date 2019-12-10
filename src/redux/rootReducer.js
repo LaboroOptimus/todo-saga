@@ -1,6 +1,6 @@
 import axios from 'axios'
 import firebase from '../firebase.js'
-import {getPomodoroTime, getPomodoroRest} from "../utils/pomodoro";
+import {getPomodoroRest, getPomodoroTime} from "../utils/pomodoro";
 
 export const initialState = {
     text: '',
@@ -51,7 +51,9 @@ export default function rootReducer(state = initialState, action) {
 
             for (let i = 0; i < startRestItems.length; i++) {
                 if (startRestItems[i].id === action.payload.id) {
-                    alert('Задача'+ '"' + startRestItems[i].title + '".' + 'Начать отдых');
+                    startRestItems[i].timerSec = 0;
+                    startRestItems[i].timerMin = action.payload.minute;
+                    alert('Задача' + '"' + startRestItems[i].title + '".' + 'Начать отдых');
                 }
             }
 
@@ -65,7 +67,9 @@ export default function rootReducer(state = initialState, action) {
 
             for (let i = 0; i < endRestItems.length; i++) {
                 if (endRestItems[i].id === action.payload.id) {
-                    alert('Задача'+ '"' + endRestItems[i].title + '".' + 'Закончить отдых');
+                    endRestItems[i].timerSec = 0;
+                    endRestItems[i].timerMin = action.payload.minute;
+                    alert('Задача' + '"' + endRestItems[i].title + '".' + 'Закончить отдых');
                 }
             }
 
@@ -106,7 +110,8 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 task: addSecondTaskEndRest,
-            }; */}
+            }; */
+        }
 
 
         case 'ADD_SECOND':

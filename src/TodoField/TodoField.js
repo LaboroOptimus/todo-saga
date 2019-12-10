@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import styled from "styled-components";
 import {connect} from 'react-redux'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCheck, faExclamationCircle, faPauseCircle, faPlay, faTimes} from '@fortawesome/free-solid-svg-icons'
+import {faCheck, faExclamationCircle, faTimes} from '@fortawesome/free-solid-svg-icons'
 import StatusCircles from '../StatusCircles/StatusCircles'
 import Timer from "../Timer/Timer";
 import {playPomodoroTimer} from "../utils/pomodoro";
@@ -166,7 +166,7 @@ function TodoField(props) {
                                         <Done icon={faCheck} onClick={() => props.completeItem(index, e.id)}/>
                                         {e.pause ?
 
-                                            (<Timer type={'play'} itemId={e.id} index={index}/>):
+                                            (<Timer type={'play'} itemId={e.id} index={index}/>) :
                                             (<Timer type={'pause'} itemId={e.id} index={index}/>)
                                             /*(<Pause icon={faPlay}
                                                     onClick={() => props.playItem(index, e.id)}/>) :

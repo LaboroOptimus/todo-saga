@@ -1,11 +1,10 @@
-import React, {useEffect, useState, useReducer} from 'react'
-import rootReducer from "../redux/rootReducer";
-import {initialState} from "../redux/rootReducer";
+import React, {useEffect, useReducer, useState} from 'react'
+import rootReducer, {initialState} from "../redux/rootReducer";
 import {connect} from 'react-redux';
 import styled from 'styled-components'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPauseCircle, faPlay} from '@fortawesome/free-solid-svg-icons'
-import {playPomodoroTimer, checkFormatTimer} from "../utils/pomodoro";
+import {checkFormatTimer, playPomodoroTimer} from "../utils/pomodoro";
 
 
 const Pause = styled(FontAwesomeIcon)`
@@ -31,7 +30,7 @@ const Timer = (props) => {
         setIsActive(!isActive);
         if (!isActive === false) {
             localStorage.setItem(String(props.itemId), String(seconds))
-           // props.checkTimer();
+            // props.checkTimer();
         }
     }
 
@@ -45,41 +44,41 @@ const Timer = (props) => {
         toggle(1);
     }
 
-    function pauseTimer(index,id) {
-        props.pauseItem(index,id);
+    function pauseTimer(index, id) {
+        props.pauseItem(index, id);
         toggle(1);
     }
 
-    function getItem(itemId){
-       for(let i = 0; i<props.task.length; i++){
-           if(props.task[i].id === itemId){
-               return {
-                   s: props.task[i].timerSec,
-                   m: props.task[i].timerMin,
-                   h: props.task[i].timerHour
-               }
-           }
-       }
+    function getItem(itemId) {
+        for (let i = 0; i < props.task.length; i++) {
+            if (props.task[i].id === itemId) {
+                return {
+                    s: props.task[i].timerSec,
+                    m: props.task[i].timerMin,
+                    h: props.task[i].timerHour
+                }
+            }
+        }
     }
 
 
-    function getArrStartRest(itemId){
-        for(let i = 0; i<props.task.length; i++){
-            if(props.task[i].id === itemId){
+    function getArrStartRest(itemId) {
+        for (let i = 0; i < props.task.length; i++) {
+            if (props.task[i].id === itemId) {
                 return props.task[i].pomodoroStartRest;
             }
         }
     }
 
 
-    function getArrEndRest(itemId){
-        for(let i = 0; i<props.task.length; i++){
-            if(props.task[i].id === itemId){
+    function getArrEndRest(itemId) {
+        for (let i = 0; i < props.task.length; i++) {
+            if (props.task[i].id === itemId) {
                 return props.task[i].pomodoroEndRest;
             }
         }
     }
-    
+
     useEffect(() => {
         let interval = null;
         if (isActive) {
@@ -130,7 +129,7 @@ function mapDispatchToProps(dispatch) {
     return {
         pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
         playItem: (index, id) => dispatch(playPomodoroTimer(index, id)),
-        checkTimer: (id, item, arr1,arr2) => dispatch(checkFormatTimer(id,item,arr1,arr2))
+        checkTimer: (id, item, arr1, arr2) => dispatch(checkFormatTimer(id, item, arr1, arr2))
     }
 }
 

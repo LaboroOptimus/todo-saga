@@ -76,7 +76,7 @@ export const checkFormatTimer = (id, item, arr1, arr2) => {
                 payload: {second, id},
             }
         }
-   }*/else if (second >= 60) {
+   }*/ else if (second >= 60) {
         minutes = minutes + 1;
         if (minutes === timerCheckpointStartRest[0]) {
             timerCheckpointStartRest.splice(0, 1);
@@ -91,9 +91,7 @@ export const checkFormatTimer = (id, item, arr1, arr2) => {
                     payload: {minutes, id},
                 } // добавили обычную минуту если массив не пустой
             }
-        }
-
-        else if (minutes === timerCheckpointEndRest[0]) {
+        } else if (minutes === timerCheckpointEndRest[0]) {
             timerCheckpointEndRest.splice(0, 1);
             if (timerCheckpointEndRest.length !== 0) {
                 return {
@@ -101,9 +99,7 @@ export const checkFormatTimer = (id, item, arr1, arr2) => {
                     payload: {minutes, id}
                 }
             } // добавление конца отдыха только когда есть значения в массиве
-        }
-
-        else {
+        } else {
             return {
                 type: 'ADD_MINUTE',
                 payload: {minutes, id},
