@@ -31,7 +31,51 @@ export default function rootReducer(state = initialState, action) {
                 user_email: '',
                 isLogin: false
             };
-        case 'ADD_SECOND_START_REST':
+
+        case 'ADD_EXTRA_MINUTE':
+            let addExtraMinute = [...state.task];
+
+            for (let i = 0; i < addExtraMinute.length; i++) {
+                if (addExtraMinute[i].id === action.payload.id) {
+                    addExtraMinute[i].extraTime = addExtraMinute[i].extraTime + 1;
+                }
+            }
+
+            return {
+                ...state,
+                task: addExtraMinute,
+            };
+
+        case 'ADD_MINUTE_START_REST':
+            let startRestItems = [...state.task];
+
+            for (let i = 0; i < startRestItems.length; i++) {
+                if (startRestItems[i].id === action.payload.id) {
+                    alert('Задача'+ '"' + startRestItems[i].title + '".' + 'Начать отдых');
+                }
+            }
+
+            return {
+                ...state,
+                startRestItems
+            };
+
+        case 'ADD_MINUTE_END_REST':
+            let endRestItems = [...state.task];
+
+            for (let i = 0; i < endRestItems.length; i++) {
+                if (endRestItems[i].id === action.payload.id) {
+                    alert('Задача'+ '"' + endRestItems[i].title + '".' + 'Закончить отдых');
+                }
+            }
+
+            return {
+                ...state,
+                endRestItems
+            };
+
+
+        {/* case 'ADD_SECOND_START_REST':
             let addSecondTaskStartRest = [...state.task];
 
             for (let i = 0; i < addSecondTaskStartRest.length; i++) {
@@ -62,10 +106,10 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 task: addSecondTaskEndRest,
-            };
+            }; */}
 
 
-        case  'ADD_SECOND':
+        case 'ADD_SECOND':
             let addSecondTasks = [...state.task];
 
             for (let i = 0; i < addSecondTasks.length; i++) {
@@ -205,6 +249,7 @@ export default function rootReducer(state = initialState, action) {
                         timerMin: 0,
                         timerHour: 0,
                         timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
+                        extraTime: 0,
                         time: hNow + ':' + mNow,
                         complete: false,
                         pause: true,
@@ -231,6 +276,7 @@ export default function rootReducer(state = initialState, action) {
                             minutes: state.minutes,
                             description: state.description,
                             timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
+                            extraTime: 0,
                             pomodoroEndRest: getPomodoroTime(startTime, endTime),
                             pomodoroStartRest: getPomodoroRest(getPomodoroTime(startTime, endTime)),
                             timerSec: 0,

@@ -53,19 +53,33 @@ const Timer = (props) => {
     function getItem(itemId){
        for(let i = 0; i<props.task.length; i++){
            if(props.task[i].id === itemId){
-             //  console.log(props.task[i]);
                return {
                    s: props.task[i].timerSec,
                    m: props.task[i].timerMin,
                    h: props.task[i].timerHour
                }
-
-
-               //return props.task[i];
            }
        }
     }
 
+
+    function getArrStartRest(itemId){
+        for(let i = 0; i<props.task.length; i++){
+            if(props.task[i].id === itemId){
+                return props.task[i].pomodoroStartRest;
+            }
+        }
+    }
+
+
+    function getArrEndRest(itemId){
+        for(let i = 0; i<props.task.length; i++){
+            if(props.task[i].id === itemId){
+                return props.task[i].pomodoroEndRest;
+            }
+        }
+    }
+    
     useEffect(() => {
         let interval = null;
         if (isActive) {
@@ -74,8 +88,10 @@ const Timer = (props) => {
             }, 1000);
 
             let item = getItem(props.itemId);
+            let itemStartRest = getArrStartRest(props.itemId);
+            let itemEndRest = getArrEndRest(props.itemId);
 
-            props.checkTimer(props.itemId, item);
+            props.checkTimer(props.itemId, item, itemStartRest, itemEndRest);
 
 
         } else if (!isActive && seconds !== 0) {
@@ -114,7 +130,7 @@ function mapDispatchToProps(dispatch) {
     return {
         pauseItem: (index, id) => dispatch({type: 'PAUSE_ITEM', payload: {index, id}}),
         playItem: (index, id) => dispatch(playPomodoroTimer(index, id)),
-        checkTimer: (id, item) => dispatch(checkFormatTimer(id,item))
+        checkTimer: (id, item, arr1,arr2) => dispatch(checkFormatTimer(id,item,arr1,arr2))
     }
 }
 

@@ -147,7 +147,6 @@ function TodoField(props) {
 
     return (
         <React.Fragment>
-
             {props.errorsTypes.length > 0 && props.errorsTypes.map((e, index) => {
                 return (
                     <Error key={index}>
