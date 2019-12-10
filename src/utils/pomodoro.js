@@ -30,7 +30,7 @@ export const getPomodoroRest = (array) => {
     return arr;
 };
 
-export const playPomodoroTimer = (index,id) => {
+export const playPomodoroTimer = (index, id) => {
 
     localStorage.setItem('play', id);
     return {
@@ -39,5 +39,46 @@ export const playPomodoroTimer = (index,id) => {
     }
 };
 
+
+export const checkFormatTimer = (id, item) => {
+    let second = item.s;
+    let minutes = item.m;
+    let hours = item.h;
+
+    if (second < 60) {
+        second = second + 1;
+        if (second%7 === 0) {
+            return {
+                type: 'ADD_SECOND_START_REST',
+                payload: {second, id}
+            }
+        } else if (second%10 === 0) {
+            return {
+                type: 'ADD_SECOND_END_REST',
+                payload: {second, id}
+            }
+        }
+
+        else {
+            return {
+                type: 'ADD_SECOND',
+                payload: {second, id},
+            }
+        }
+    } else if (second >= 60) {
+        minutes = minutes + 1;
+        return {
+            type: 'ADD_MINUTE',
+            payload: {minutes, id},
+        }
+    } else if (minutes >= 60) {
+        hours = hours + 1;
+        return {
+            type: 'ADD_HOUR',
+            payload: {hours, id},
+        }
+    }
+
+}
 
 

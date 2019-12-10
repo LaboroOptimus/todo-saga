@@ -166,10 +166,13 @@ function TodoField(props) {
                                     <Row>
                                         <Done icon={faCheck} onClick={() => props.completeItem(index, e.id)}/>
                                         {e.pause ?
-                                            (<Pause icon={faPlay}
+
+                                            (<Timer type={'play'} itemId={e.id} index={index}/>):
+                                            (<Timer type={'pause'} itemId={e.id} index={index}/>)
+                                            /*(<Pause icon={faPlay}
                                                     onClick={() => props.playItem(index, e.id)}/>) :
                                             (<Pause icon={faPauseCircle}
-                                                    onClick={() => props.pauseItem(index, e.id)}/>)
+                                                    onClick={() => props.pauseItem(index, e.id)}/>)*/
                                         }
                                         <Close size="lg" icon={faTimes}
                                                onClick={() => props.removeItem(index, e.id)}/>
@@ -184,7 +187,6 @@ function TodoField(props) {
                                     </Row>
 
                                     <Row>
-                                        <Timer id={e.id}/>
                                         <CreationTime>Создано: {e.time}</CreationTime>
                                         <Time>Планируемое время: {e.hours}:{e.minutes}</Time>
                                         <Time>Прошло: <br/>{e.timerHour}:{e.timerMin}:{e.timerSec}</Time>

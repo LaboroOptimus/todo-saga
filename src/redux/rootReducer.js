@@ -16,15 +16,6 @@ export const initialState = {
 };
 
 
-/*const actions = [
-    {
-        eventId:
-        taskId:
-        status:
-        time:
-    }
-]*/
-
 let user = '';
 if (localStorage.getItem('user') === null) {
     user = ''
@@ -40,6 +31,82 @@ export default function rootReducer(state = initialState, action) {
                 user_email: '',
                 isLogin: false
             };
+        case 'ADD_SECOND_START_REST':
+            let addSecondTaskStartRest = [...state.task];
+
+            for (let i = 0; i < addSecondTaskStartRest.length; i++) {
+                if (addSecondTaskStartRest[i].id === action.payload.id) {
+                    addSecondTaskStartRest[i].timerSec = action.payload.second;
+                }
+            }
+
+            console.log('отдых начался', action.payload.second);
+
+            return {
+                ...state,
+                task: addSecondTaskStartRest,
+            };
+
+        case 'ADD_SECOND_END_REST':
+            let addSecondTaskEndRest = [...state.task];
+
+            for (let i = 0; i < addSecondTaskEndRest.length; i++) {
+                if (addSecondTaskEndRest[i].id === action.payload.id) {
+                    addSecondTaskEndRest[i].timerSec = action.payload.second;
+                    addSecondTaskEndRest[i].timeToEnd = addSecondTaskEndRest[i].timeToEnd - 1;
+                }
+            }
+
+            console.log('отдых закончился', action.payload.second);
+
+            return {
+                ...state,
+                task: addSecondTaskEndRest,
+            };
+
+
+        case  'ADD_SECOND':
+            let addSecondTasks = [...state.task];
+
+            for (let i = 0; i < addSecondTasks.length; i++) {
+                if (addSecondTasks[i].id === action.payload.id) {
+                    addSecondTasks [i].timerSec = action.payload.second;
+                }
+            }
+
+            return {
+                ...state,
+                task: addSecondTasks,
+            };
+
+        case 'ADD_MINUTE':
+            let addMinuteTasks = [...state.task];
+            for (let i = 0; i < addMinuteTasks.length; i++) {
+                if (addMinuteTasks[i].id === action.payload.id) {
+                    addMinuteTasks[i].timerSec = 0;
+                    addMinuteTasks[i].timerMin = action.payload.minutes;
+                }
+            }
+            return {
+                ...state,
+                task: addMinuteTasks
+            };
+
+
+        case 'ADD_HOUR':
+            let addHourTasks = [...state.task];
+            for (let i = 0; i < addHourTasks.length; i++) {
+                if (addHourTasks[i].id === action.payload.id) {
+                    addHourTasks[i].timerMin = 0;
+                    addHourTasks[i].timerHour = action.payload.hours;
+                }
+            }
+
+            return {
+                ...state,
+                task: addHourTasks
+            };
+
         case 'ADD_DATA':
             let fetch_data = [];
 
@@ -270,9 +337,7 @@ export default function rootReducer(state = initialState, action) {
 
         case 'PLAY_ITEM':
             let playTasks = [...state.task];
-           // localStorage.setItem('play', action.payload.id);
-
-
+            // localStorage.setItem('play', action.payload.id);
 
 
             const playTime = new Date();
