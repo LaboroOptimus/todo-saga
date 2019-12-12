@@ -1,12 +1,15 @@
-import {all, call, put, takeEvery,cancel,select,take,fork ,getContext,takeLatest} from 'redux-saga/effects'
+import {all, call, put, takeEvery} from 'redux-saga/effects'
+import firebase from "../firebase";
+
+let user;
+
+if (localStorage.getItem('user') === null) {
+    user = ''
+} else {
+    user = localStorage.getItem('user').replace(/\./gi, '');
+}
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-const wait = ms => {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(), ms)
-    })
-}
 
 export function* fetchError() {
     yield put({type: 'FETCH_ERROR'})
@@ -25,36 +28,48 @@ export function* watchLoad() {
     yield takeEvery('LOAD', workerLoadData)
 }
 
-/*TIMER */
-/*export function* watchSetTimer() {
-    yield takeEvery('SET_TIMER', workerSetTimer)
+/* TIME TO SERVER */
+export function* watchHours() {
+    yield takeEvery('ADD_HOUR', workerLoadHours);
 }
 
-export function* workerSetTimer(data) {
-    /!*console.log('сага:', data.payload);*!/
-    yield put({type: 'CHECK_TIMER', payload: data.payload});
+export function* workerLoadHours(data) {
+    firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(data.payload.id).once('value').then(function (snapshot) {
+        snapshot.forEach(function (child) {
+            child.ref.update({
+                timerHour: data.payload.hours
+            });
+        })
+    });
+    yield put({type: 'LOAD_HOURS_TO_SERVER'})
 }
 
-
-function* tick() {
-    const playId = localStorage.getItem('play');
-    while(true) {
-        yield call(delay,1000);
-        yield put({type: 'SET_TIMER', payload:playId});
-    }
+export function* watchMinutes() {
+    yield takeEvery('ADD_MINUTE', workerLoadMinutes);
+    yield takeEvery('ADD_MINUTE_END_REST', workerLoadMinutes);
+    yield takeEvery('ADD_MINUTE_START_REST', workerLoadMinutes);
 }
 
-function* timer() {
-    while(yield take('PLAY_ITEM')) {
-        const bgSyncTask = yield fork(tick);
-        yield take('PAUSE_ITEM')
-        yield cancel(bgSyncTask)
-    }
-}*/
+export function* workerLoadMinutes(data) {
+    firebase.database().ref(`todo/${user}`).orderByChild('id').equalTo(data.payload.id).once('value').then(function (snapshot) {
+        snapshot.forEach(function (child) {
+            child.ref.update({
+                timerMin: data.payload.minutes
+            });
+        })
+    });
+    yield put({type: 'LOAD_MINUTES_TO_SERVER'});
+}
 
-/*TIMER */
+export function* watchExtraTime() {
+    yield takeEvery('ADD_EXTRA_MINUTE', workerLoadExtraTime);
+}
 
+export function* workerLoadExtraTime(data) {
+    yield put({type: 'LOAD_EXTRA_TIME_TO_SERVER'});
+}
 
+/* TIME TO SERVER */
 export function* workerLoadData() {
     try {
         let user = localStorage.getItem('user').replace(/\./gi, '');
@@ -102,7 +117,8 @@ export default function* rootSaga() {
         watchValidate(),
         watchFilters(),
         watchLoad(),
-       /* timer(),
-        watchSetTimer(),*/
+        watchMinutes(),
+        watchExtraTime(),
+        watchHours()
     ])
 }

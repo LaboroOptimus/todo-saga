@@ -32,6 +32,9 @@ export default function rootReducer(state = initialState, action) {
                 isLogin: false
             };
 
+
+
+
         case 'ADD_EXTRA_MINUTE':
             let addExtraMinute = [...state.task];
 
@@ -77,42 +80,6 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 endRestItems
             };
-
-
-        {/* case 'ADD_SECOND_START_REST':
-            let addSecondTaskStartRest = [...state.task];
-
-            for (let i = 0; i < addSecondTaskStartRest.length; i++) {
-                if (addSecondTaskStartRest[i].id === action.payload.id) {
-                    addSecondTaskStartRest[i].timerSec = action.payload.second;
-                }
-            }
-
-            console.log('отдых начался', action.payload.second);
-
-            return {
-                ...state,
-                task: addSecondTaskStartRest,
-            };
-
-        case 'ADD_SECOND_END_REST':
-            let addSecondTaskEndRest = [...state.task];
-
-            for (let i = 0; i < addSecondTaskEndRest.length; i++) {
-                if (addSecondTaskEndRest[i].id === action.payload.id) {
-                    addSecondTaskEndRest[i].timerSec = action.payload.second;
-                    addSecondTaskEndRest[i].timeToEnd = addSecondTaskEndRest[i].timeToEnd - 1;
-                }
-            }
-
-            console.log('отдых закончился', action.payload.second);
-
-            return {
-                ...state,
-                task: addSecondTaskEndRest,
-            }; */
-        }
-
 
         case 'ADD_SECOND':
             let addSecondTasks = [...state.task];
@@ -191,41 +158,6 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 description: action.payload
             };
-        /*   case 'CHECK_TIMER':
-               let checkTimerTask = [...state.task];
-               let checkElem = checkTimerTask.findIndex(checkTimerTask => checkTimerTask.id === +action.payload);
-               console.log(checkElem);
-
-               /!* if(checkTimerTask[checkElem].timerMin === 25){
-                    checkTimerTask[checkElem].timeToEnd -=1;
-                } *!/
-               return {
-                   ...state,
-                   task: checkTimerTask,
-                   errorsTypes: []
-               };
-   */
-
-        /* case 'SET_TIMER':
-             let newTimerTask = [...state.task];
-             let elem = newTimerTask.findIndex(newTimerTask => newTimerTask.id === +action.payload);
-             newTimerTask[elem].timerSec += 1;
-
-             if (newTimerTask[elem].timerSec === 60) {
-                 newTimerTask[elem].timerMin += 1;
-                 newTimerTask[elem].timerSec = 0;
-             }
-
-             if (newTimerTask[elem].timerMin === 60) {
-                 newTimerTask[elem].timerHour += 1;
-                 newTimerTask[elem].timerMin = 0;
-             }
-
-             return {
-                 ...state,
-                 task: newTimerTask,
-                 errorsTypes: []
-             };*/
 
         case 'ADD':
             switch (state.error) {
