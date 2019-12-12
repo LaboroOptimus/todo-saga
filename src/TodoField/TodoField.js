@@ -145,6 +145,8 @@ function TodoField(props) {
         props.watchTimer();
     }, [])
 
+
+
     return (
         <React.Fragment>
             {props.errorsTypes.length > 0 && props.errorsTypes.map((e, index) => {
@@ -183,7 +185,11 @@ function TodoField(props) {
                                     </Row>
 
                                     <Row>
-                                        <StatusCircles numm={e.timeToEnd}/>
+                                        {e.extraTime === 0 ?
+                                            (<StatusCircles backgroundColor={'#fff'} numm={e.timeToEnd}/>):
+                                            (<StatusCircles backgroundColor={'#f10a4b'} numm={Math.ceil((e.extraTime) / 30)}/>)
+                                        }
+
                                     </Row>
 
                                     <Row>

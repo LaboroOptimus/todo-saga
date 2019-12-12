@@ -32,9 +32,6 @@ export default function rootReducer(state = initialState, action) {
                 isLogin: false
             };
 
-
-
-
         case 'ADD_EXTRA_MINUTE':
             let addExtraMinute = [...state.task];
 
@@ -86,7 +83,7 @@ export default function rootReducer(state = initialState, action) {
 
             for (let i = 0; i < addSecondTasks.length; i++) {
                 if (addSecondTasks[i].id === action.payload.id) {
-                    addSecondTasks [i].timerSec = action.payload.second;
+                    addSecondTasks[i].timerSec = action.payload.second;
                 }
             }
 
@@ -171,6 +168,7 @@ export default function rootReducer(state = initialState, action) {
 
                     const startTime = (time.getHours() * 60) + time.getMinutes();
                     const endTime = startTime + (+state.hours * 60 + +state.minutes);
+                  //  let extraCircles = Math.ceil((state.extraTime) / 30);
 
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
                     let id = Math.round(rand);
@@ -187,6 +185,7 @@ export default function rootReducer(state = initialState, action) {
                         timerHour: 0,
                         timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
                         extraTime: 0,
+                        extraCircles: Math.ceil((state.task.extraTime) / 30),
                         time: hNow + ':' + mNow,
                         complete: false,
                         pause: true,
@@ -214,6 +213,7 @@ export default function rootReducer(state = initialState, action) {
                             description: state.description,
                             timeToEnd: Math.ceil((+state.hours * 60 + +state.minutes) / 30),
                             extraTime: 0,
+                            extraCircles: Math.ceil((state.task.extraTime) / 30),
                             pomodoroEndRest: getPomodoroTime(startTime, endTime),
                             pomodoroStartRest: getPomodoroRest(getPomodoroTime(startTime, endTime)),
                             timerSec: 0,
@@ -320,9 +320,6 @@ export default function rootReducer(state = initialState, action) {
 
         case 'PLAY_ITEM':
             let playTasks = [...state.task];
-            // localStorage.setItem('play', action.payload.id);
-
-
             const playTime = new Date();
             var playAction = {};
 
