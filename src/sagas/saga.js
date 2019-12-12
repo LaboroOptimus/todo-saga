@@ -69,6 +69,20 @@ export function* workerLoadExtraTime(data) {
     yield put({type: 'LOAD_EXTRA_TIME_TO_SERVER'});
 }
 
+export function* watchExit() {
+    yield takeEvery('EXIT', workerExit);
+}
+
+export function* workerExit() {
+    window.location.reload();
+    yield put({type:'RELOAD'});
+
+}
+
+
+
+
+
 /* TIME TO SERVER */
 export function* workerLoadData() {
     try {
@@ -119,6 +133,7 @@ export default function* rootSaga() {
         watchLoad(),
         watchMinutes(),
         watchExtraTime(),
-        watchHours()
+        watchHours(),
+        watchExit()
     ])
 }

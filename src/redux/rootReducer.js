@@ -12,7 +12,7 @@ export const initialState = {
     validate: false,
     errorsTypes: [],
     isLogin: false,
-    user_email: ''
+    user_email: '',
 };
 
 
@@ -32,6 +32,13 @@ export default function rootReducer(state = initialState, action) {
                 isLogin: false
             };
 
+        case 'LOAD_USER':
+            const userEmailStorage = localStorage.getItem('user');
+            console.log(userEmailStorage);
+            return {
+                ...state,
+                user_email: userEmailStorage
+            };
         case 'ADD_EXTRA_MINUTE':
             let addExtraMinute = [...state.task];
 

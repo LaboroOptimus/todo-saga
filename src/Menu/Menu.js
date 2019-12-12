@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
 import {connect} from "react-redux";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 
 
 const Wrapper = styled.div`
@@ -53,7 +53,6 @@ const ExitButton = styled.button`
     padding-right: 10px;
     margin-right: 20px;
    
-    
     :hover {
         background: transparent;
         border: 2px solid #1F5C53;
@@ -62,12 +61,43 @@ const ExitButton = styled.button`
     }
 `;
 
+const User = styled.div`
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const UserImage = styled.img`
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   margin-top: 7px;
+   margin-right: 5px;
+   background-image: ${props => props.backgroundImage}
+`;
+
+const UserInfo = styled.span`
+    padding-top: 13px;
+`;
+
 const Menu = (props) => {
+
+    useEffect(() => {
+        props.loadUser();
+    }, [])
+
     return (
         <Wrapper>
+
             <Exit onClick={props.handleExit}>
                 <ExitSpan>Выход <ExitIcon icon={faSignOutAlt}/></ExitSpan>
             </Exit>
+            {props.user_email.length > 1 ?
+                (<User>
+                    <UserImage backgroundImage={'url(https://via.placeholder.com/30)'}/>
+                    <UserInfo>Привет, {props.user_email}</UserInfo>
+                </User>) : null}
         </Wrapper>
     )
 };
@@ -79,7 +109,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    handleExit: () => dispatch({type: "EXIT"})
+    handleExit: () => dispatch({type: "EXIT"}),
+    loadUser: () => dispatch({type: "LOAD_USER"})
 });
 
 

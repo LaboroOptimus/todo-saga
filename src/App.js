@@ -1,40 +1,18 @@
 import React from 'react';
 import './App.css';
-import TodoInput from "./TodoInput/TodoInput";
-import TodoField from "./TodoField/TodoField";
-import Filters from "./Filters/Filters";
-import {connect} from "react-redux";
-import Login from "./Login/Login";
-import Menu from "./Menu/Menu";
-
-
-function isLogin() {
-    return !(localStorage.user === '' || !localStorage.user);
-}
+import Todo from "./Todo/Todo";
+import {Route, Switch} from 'react-router-dom';
+import Profile from "./Profile/Profile";
 
 const App = (props) => {
     return (
         <div className="App">
-            {isLogin() ? (
-                    <React.Fragment>
-                        <Menu/>
-                        <TodoInput/>
-                        <Filters/>
-                        <TodoField/>
-                    </React.Fragment>
-                ) :
-                (<Login/>)
-            }
+            <Switch>
+                <Route exact path='/' component={Todo}/>
+                <Route exact path='/profile' component={Profile}/>
+            </Switch>
         </div>
     );
 };
 
-
-function mapStateToProps(state) {
-    return {
-        isLogin: state.root.isLogin,
-    }
-}
-
-
-export default connect(mapStateToProps)(App)
+export default App
