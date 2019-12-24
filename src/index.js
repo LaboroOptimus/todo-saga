@@ -9,15 +9,16 @@ import reducer from "./redux/indexReducer";
 import {Provider} from 'react-redux'
 import rootSaga from './sagas/saga.js'
 import {BrowserRouter} from "react-router-dom";
+import {store} from "./redux/store";
 
 
-const sagaMiddleware = createSagaMiddleware();
+/*const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
     reducer,
     applyMiddleware(sagaMiddleware)
-);
+);*/
 
-sagaMiddleware.run(rootSaga);
+/*sagaMiddleware.run(rootSaga);*/
 
 const app = (
     <BrowserRouter>
