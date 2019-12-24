@@ -74,7 +74,6 @@ const UserImage = styled.img`
    border-radius: 50%;
    margin-top: 7px;
    margin-right: 5px;
-   background-image: ${props => props.backgroundImage}
 `;
 
 const UserInfo = styled.span`
@@ -95,7 +94,7 @@ const Menu = (props) => {
             </Exit>
             {props.user_email.length > 1 ?
                 (<User>
-                    <UserImage backgroundImage={'url(https://via.placeholder.com/30)'}/>
+                    <UserImage src={props.user_avatar === 0 ? 'url(https://via.placeholder.com/30)' : `${props.user_avatar}`}/>
                     <UserInfo>Привет, {props.user_email}</UserInfo>
                 </User>) : null}
         </Wrapper>
@@ -104,7 +103,8 @@ const Menu = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        user_email: state.root.user_email
+        user_email: state.root.user_email,
+        user_avatar: state.root.user_avatar
     }
 };
 

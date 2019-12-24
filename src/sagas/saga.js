@@ -1,5 +1,7 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects'
 import firebase from "../firebase";
+import axios from 'axios'
+
 
 let user;
 
@@ -75,13 +77,80 @@ export function* watchExit() {
 
 export function* workerExit() {
     window.location.reload();
-    yield put({type:'RELOAD'});
-
+    yield put({type: 'RELOAD'});
 }
 
 
+/* FETCH USER_IMAGE */
+export function* watchChangeImage() {
+    yield takeEvery('CHANGE_FILE', workerChangeImage)
+}
 
+export function* workerChangeImage(data) {
+    axios.get(`https://todo-saga-987da.firebaseio.com/users.json`).then(response => {
+        let users = Object.keys(response.data);
+        let isUserExist = false;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i] === user) {
+                isUserExist = true;
+                break;
+            }
+        }
 
+        if (isUserExist) {
+            firebase.database().ref(`users/${user}`).once('value').then(function (snapshot) {
+                snapshot.forEach(function (child) {
+                    child.ref.update({
+                        image: data.payload
+                    });
+                })
+            });
+        }
+
+        else {
+            let user_data = {
+                image: data.payload
+            };
+            axios.post(`https://todo-saga-987da.firebaseio.com/users/${user}.json`, user_data)
+                .then(response => {
+                })
+                .catch(error => console.log(error));
+        }
+    });
+}
+
+export function * watchLoadUserAvatar() {
+    yield takeEvery('LOAD_USER', workerLoadUserAvatar)
+}
+export function * workerLoadUserAvatar() {
+    try {
+        const data = yield call(() => {
+                return fetch(`https://todo-saga-987da.firebaseio.com/users/${user}.json`)
+                    .then(res => res.json())
+            }
+        );
+        yield put({type: 'LOAD_USER_AVATAR', payload: data});
+    } catch (error) {
+        yield put(fetchError);
+    }
+}
+
+ export function * watchReloadProfile() {
+    yield takeEvery('LOAD_USER_DATA', workerReloadProfile)
+}
+
+export function * workerReloadProfile() {
+    try {
+        const data = yield call(() => {
+                return fetch(`https://todo-saga-987da.firebaseio.com/users/${user}.json`)
+                    .then(res => res.json())
+            }
+        );
+        yield put({type: 'LOAD_USER_DATA_SUCCESS', payload: data});
+    } catch (error) {
+        yield put(fetchError);
+    }
+}
 
 /* TIME TO SERVER */
 export function* workerLoadData() {
@@ -105,7 +174,6 @@ export function* watchFilters() {
 
 export function* workerFilter(data) {
     yield put({type: 'CHANGE_FILTER', payload: data.payload});
-
 }
 
 export function* watchFetchAsync() {
@@ -134,6 +202,10 @@ export default function* rootSaga() {
         watchMinutes(),
         watchExtraTime(),
         watchHours(),
-        watchExit()
+        watchExit(),
+        watchChangeImage(),
+        watchReloadProfile(),
+        watchLoadUserAvatar()
+
     ])
 }

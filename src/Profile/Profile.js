@@ -1,10 +1,15 @@
-import React from 'react'
+import React, {Component} from 'react'
 import styled from 'styled-components';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPencilAlt, faCheck} from '@fortawesome/free-solid-svg-icons'
 import {connect} from "react-redux";
 import {previewFile} from "../utils/profile";
 
+import {ReactComponent as Rings} from "../rings.svg";
+
+const Preloader = styled(Rings)`
+    fill: #000;
+`;
 
 const Wrapper = styled.div`
     padding: 30px;
@@ -87,36 +92,45 @@ const Button = styled.button`
 `;
 
 
-const Profile = (props) => {
-    return (
-        <Wrapper>
-            <Container>
-                <ImgBlock>
-                    <Img src={props.fileSrc}/>
-                    <File type='file' onChange={props.onChangeFile}/>
-                </ImgBlock>
-                <FormBlock>
-                    <InputTitle>Имя <Edit icon={faPencilAlt} onClick={props.onEditName}/></InputTitle>
-                    {props.isNameShow && <Name>{props.name}</Name>}
-                    {props.editName && (<InputBlock>
-                        <Input onChange={props.onChangeName} placeholder='Введите имя' value={props.name}/>
-                        <Check icon={faCheck} onClick={props.onCheckName}/>
-                    </InputBlock>)}
+class Profile extends Component {
+    componentDidMount() {
+        this.props.onLoadUserData();
+    }
 
-                    <InputTitle>Email <Edit icon={faPencilAlt} onClick={props.onEditEmail}/></InputTitle>
-                    {props.isEmailShow && <Email>{props.email}</Email>}
-                    {props.editEmail && (
-                    <InputBlock>
-                        <Input onChange={props.onChangeEmail} placeholder='Введите email' value={props.email}/>
-                        <Check icon={faCheck} onClick={props.onCheckEmail}/>
-                    </InputBlock>)}
-                    {((props.isEmailChanged && !props.editEmail) || (props.isNameChanged && !props.editName)) && (<Button>Сохранить изменения</Button>)}
-                </FormBlock>
+    render() {
+        return (
+            <Wrapper>
+                <Container>
+                    <ImgBlock>
+                        {this.props.fileSrc.length === 0 ? <Preloader/> : <Img src={this.props.fileSrc}/>}
+                        <File type='file' onChange={this.props.onChangeFile}/>
+                    </ImgBlock>
+                    <FormBlock>
+                        <InputTitle>Имя <Edit icon={faPencilAlt} onClick={this.props.onEditName}/></InputTitle>
+                        {this.props.isNameShow && <Name>{this.props.name}</Name>}
+                        {this.props.editName && (<InputBlock>
+                            <Input onChange={this.props.onChangeName} placeholder='Введите имя'
+                                   value={this.props.name}/>
+                            <Check icon={faCheck} onClick={this.props.onCheckName}/>
+                        </InputBlock>)}
 
-            </Container>
-        </Wrapper>
-    )
-};
+                        <InputTitle>Email <Edit icon={faPencilAlt} onClick={this.props.onEditEmail}/></InputTitle>
+                        {this.props.isEmailShow && <Email>{this.props.email}</Email>}
+                        {this.props.editEmail && (
+                            <InputBlock>
+                                <Input onChange={this.props.onChangeEmail} placeholder='Введите email'
+                                       value={this.props.email}/>
+                                <Check icon={faCheck} onClick={this.props.onCheckEmail}/>
+                            </InputBlock>)}
+                        {((this.props.isEmailChanged && !this.props.editEmail) || (this.props.isNameChanged && !this.props.editName)) &&
+                        (<Button onClick={this.props.onUploadUserData}>Сохранить изменения</Button>)}
+                    </FormBlock>
+
+                </Container>
+            </Wrapper>
+        )
+    }
+}
 
 function mapStateToProps(state) {
     return {
@@ -141,6 +155,8 @@ function mapDispatchToProps(dispatch) {
         onChangeName: (e) => dispatch({type: 'CHANGE_NAME', payload: e.target.value}),
         onChangeEmail: (e) => dispatch({type: 'CHANGE_EMAIL', payload: e.target.value}),
         onChangeFile: (e) => previewFile(e.target.files[0]),
+        onUploadUserData: () => dispatch({type: 'UPLOAD_DATA'}),
+        onLoadUserData: () => dispatch({type: 'LOAD_USER_DATA'})
         /*onChangeFile: (e) => dispatch({type: 'CHANGE_FILE', payload: e.target.files[0]}),*/
     }
 }

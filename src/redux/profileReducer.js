@@ -7,13 +7,25 @@ const initialState = {
     isEmailShow: false,
     name: '',
     email: '',
-    fileSrc: 'https://via.placeholder.com/200',
+    fileSrc: '',
 };
 
 export default function profileReducer(state = initialState, action) {
     switch (action.type) {
+        case 'LOAD_USER_DATA_SUCCESS':
+            let image = action.payload[Object.keys(action.payload)[0]].image
+
+            return {
+                ...state,
+                fileSrc: image
+            };
+        case 'UPLOAD_DATA_IMAGE':
+            console.log('upload data image')
+            return {
+                ...state
+            };
         case 'CHANGE_FILE':
-            console.log('change_file')
+            console.log('change_file', action.payload);
             return {
                 ...state,
                 fileSrc: action.payload
@@ -48,6 +60,7 @@ export default function profileReducer(state = initialState, action) {
                 isEmailChanged: true,
                 email: action.payload
             };
+
         case 'CHANGE_NAME':
             return {
                 ...state,

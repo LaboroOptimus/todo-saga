@@ -13,8 +13,8 @@ export const initialState = {
     errorsTypes: [],
     isLogin: false,
     user_email: '',
+    user_avatar: '',
 };
-
 
 let user = '';
 if (localStorage.getItem('user') === null) {
@@ -34,10 +34,18 @@ export default function rootReducer(state = initialState, action) {
 
         case 'LOAD_USER':
             const userEmailStorage = localStorage.getItem('user');
-            console.log(userEmailStorage);
             return {
                 ...state,
                 user_email: userEmailStorage
+            };
+
+        case 'LOAD_USER_AVATAR':
+           let avatar =  action.payload[Object.keys(action.payload)[0]].image;
+
+            console.log()
+            return {
+                ...state,
+                user_avatar: avatar
             };
         case 'ADD_EXTRA_MINUTE':
             let addExtraMinute = [...state.task];
@@ -175,8 +183,6 @@ export default function rootReducer(state = initialState, action) {
 
                     const startTime = (time.getHours() * 60) + time.getMinutes();
                     const endTime = startTime + (+state.hours * 60 + +state.minutes);
-                  //  let extraCircles = Math.ceil((state.extraTime) / 30);
-
                     let rand = 1 - 0.5 + Math.random() * (10000 - 1 + 1);
                     let id = Math.round(rand);
 
