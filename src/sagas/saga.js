@@ -81,6 +81,26 @@ export function* workerExit() {
 }
 
 
+/* UPLOAD USER DATA */
+
+export function* watchUploadUserData() {
+    yield takeEvery('UPLOAD_USER_DATA', workerUploadUserData);
+}
+
+export function* workerUploadUserData(data) {
+    axios.get(`https://todo-saga-987da.firebaseio.com/users/${user}.json`).then(response => {
+        let keys = Object.keys(response.data);
+        let userNameKey = keys[0];
+        firebase.database().ref(`/users/${user}/${userNameKey}`).update({
+            name: data.payload.name,
+            email: data.payload.email
+        })
+    })
+
+    yield put({type: 'UPLOAD_USER_DATA_SUCCESS'});
+}
+
+
 /* FETCH USER_IMAGE */
 export function* watchChangeImage() {
     yield takeEvery('CHANGE_FILE', workerChangeImage)
@@ -105,9 +125,7 @@ export function* workerChangeImage(data) {
                     });
                 })
             });
-        }
-
-        else {
+        } else {
             let user_data = {
                 image: data.payload
             };
@@ -119,10 +137,11 @@ export function* workerChangeImage(data) {
     });
 }
 
-export function * watchLoadUserAvatar() {
+export function* watchLoadUserAvatar() {
     yield takeEvery('LOAD_USER', workerLoadUserAvatar)
 }
-export function * workerLoadUserAvatar() {
+
+export function* workerLoadUserAvatar() {
     try {
         const data = yield call(() => {
                 return fetch(`https://todo-saga-987da.firebaseio.com/users/${user}.json`)
@@ -135,11 +154,12 @@ export function * workerLoadUserAvatar() {
     }
 }
 
- export function * watchReloadProfile() {
+export function* watchReloadProfile() {
     yield takeEvery('LOAD_USER_DATA', workerReloadProfile)
 }
 
-export function * workerReloadProfile() {
+export function* workerReloadProfile() {
+    console.log('LOAD_USER_DATA');
     try {
         const data = yield call(() => {
                 return fetch(`https://todo-saga-987da.firebaseio.com/users/${user}.json`)
@@ -193,6 +213,7 @@ export function* workerFetchTodo() {
     }
 }
 
+
 export default function* rootSaga() {
     yield all([
         watchFetchAsync(),
@@ -205,7 +226,7 @@ export default function* rootSaga() {
         watchExit(),
         watchChangeImage(),
         watchReloadProfile(),
-        watchLoadUserAvatar()
-
+        watchLoadUserAvatar(),
+        watchUploadUserData()
     ])
 }

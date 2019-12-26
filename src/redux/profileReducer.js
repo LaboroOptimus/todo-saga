@@ -13,8 +13,8 @@ const initialState = {
 export default function profileReducer(state = initialState, action) {
     switch (action.type) {
         case 'LOAD_USER_DATA_SUCCESS':
-            let image = action.payload[Object.keys(action.payload)[0]].image
-
+            let image = action.payload[Object.keys(action.payload)[0]].image;
+            console.log('LOAD_USER_DATA_SUCCESS');
             return {
                 ...state,
                 fileSrc: image
@@ -25,7 +25,7 @@ export default function profileReducer(state = initialState, action) {
                 ...state
             };
         case 'CHANGE_FILE':
-            console.log('change_file', action.payload);
+            console.log('CHANGE_FILE');
             return {
                 ...state,
                 fileSrc: action.payload

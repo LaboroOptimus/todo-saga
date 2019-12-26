@@ -28,11 +28,10 @@ export const checkIfUserExists = (userId) => {
     });
 }
 
-/*
-export function readFile(a) {
-    return {
-        type: 'CHANGE_FILE',
-        payload: a
-    }
-}
-*/
+export const uploadData = (email,name) => {
+    //e.preventDefault();
+
+    console.log('выполнилось');
+    store.dispatch({ type: 'UPLOAD_USER_DATA', payload: {email,name}})
+
+};
