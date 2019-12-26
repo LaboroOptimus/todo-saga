@@ -3,7 +3,7 @@ const initialState = {
     editEmail: false,
     isEmailChanged: false,
     isNameChanged: false,
-    isNameFalse: false,
+    isNameShow: false,
     isEmailShow: false,
     name: '',
     email: '',
@@ -14,10 +14,17 @@ export default function profileReducer(state = initialState, action) {
     switch (action.type) {
         case 'LOAD_USER_DATA_SUCCESS':
             let image = action.payload[Object.keys(action.payload)[0]].image;
-            console.log('LOAD_USER_DATA_SUCCESS');
+            let name = action.payload[Object.keys(action.payload)[0]].name;
+            let email = action.payload[Object.keys(action.payload)[0]].email;
+
+            console.log('LOAD_USER_DATA_SUCCESS', action.payload);
             return {
                 ...state,
-                fileSrc: image
+                fileSrc: image,
+                name: name,
+                email: email,
+                isNameShow: true,
+                isEmailShow: true
             };
         case 'UPLOAD_DATA_IMAGE':
             console.log('upload data image')

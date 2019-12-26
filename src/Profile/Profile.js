@@ -145,14 +145,14 @@ function Profile(props) {
                     </Dropzone>
                 </ImgBlock>
                 <FormBlock>
-                    <InputTitle>Имя <Edit icon={faPencilAlt} onClick={props.onEditName}/></InputTitle>
+                    <InputTitle>Имя {!props.editName && <Edit icon={faPencilAlt} onClick={props.onEditName}/>}</InputTitle>
                     {props.isNameShow && <Name>{props.name}</Name>}
                     {props.editName && (<InputBlock>
                         <Input onChange={props.onChangeName} placeholder='Введите имя'
                                value={props.name}/>
                         <Check icon={faCheck} onClick={props.onCheckName}/>
                     </InputBlock>)}
-                    <InputTitle>Email <Edit icon={faPencilAlt} onClick={props.onEditEmail}/></InputTitle>
+                    <InputTitle>Email {!props.editEmail && <Edit icon={faPencilAlt} onClick={props.onEditEmail}/>}</InputTitle>
                     {props.isEmailShow && <Email>{props.email}</Email>}
                     {props.editEmail && (
                         <InputBlock>

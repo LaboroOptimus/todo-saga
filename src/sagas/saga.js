@@ -100,7 +100,6 @@ export function* workerUploadUserData(data) {
     yield put({type: 'UPLOAD_USER_DATA_SUCCESS'});
 }
 
-
 /* FETCH USER_IMAGE */
 export function* watchChangeImage() {
     yield takeEvery('CHANGE_FILE', workerChangeImage)
@@ -159,7 +158,6 @@ export function* watchReloadProfile() {
 }
 
 export function* workerReloadProfile() {
-    console.log('LOAD_USER_DATA');
     try {
         const data = yield call(() => {
                 return fetch(`https://todo-saga-987da.firebaseio.com/users/${user}.json`)
